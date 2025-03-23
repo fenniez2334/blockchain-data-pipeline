@@ -5,7 +5,7 @@ variable "credentials" {
 
 variable "project" {
   description = "Project Name"
-  default = "central-beach-447906-q6"
+  default = "blockchain-data-pipeline"
 }
 
 variable "region" {
@@ -20,15 +20,35 @@ variable "location" {
 
 variable "bq_dataset_name" {
   description = "My BigQuery Dataset Name"
-  default = "demo_dataset"
+  default = "bc_dataset"
 }
 
 variable "gcs_bucket_name" {
   description = "Bucket Storage Bucket Name"
-  default = "central-beach-447906-q6-terra-bucket"
+  default = "blockchain-data-pipeline-bucket"
 }
 
 variable "gcs_storage_class" {
   description = "Bucket Storage Class"
   default = "STANDARD"
+}
+
+variable "gcs_service_account_name" {
+  description = "Service Account Name"
+  default = "blockchain-pipeline-sa"
+}
+
+variable "gcs_instance_name" {
+  description = "VM Instance Name"
+  default = "blockchain-dev"
+}
+
+variable "instance_machine_type" {
+  description = "Instance Machine Type"
+  default = "e2-standard-4"
+}
+
+variable "boot_disk_image_type" {
+  description = "Boot Disk Image Type"
+  default = "ubuntu-os-cloud/ubuntu-2004-focal-v20250111"
 }
