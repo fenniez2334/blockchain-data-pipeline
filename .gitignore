@@ -1,0 +1,5 @@
+# Ignore GCP service account key
+my-creds.json
+*.json
+*.tfstate
+!terraform.tfvars
