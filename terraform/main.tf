@@ -38,12 +38,6 @@ resource "google_bigquery_dataset" "gcp_dataset" {
   location = var.location
 }
 
-
-resource "google_service_account" "blockchain_sa" {
-  account_id   = var.gcs_service_account_name
-  display_name = var.gcs_service_account_name
-}
-
 resource "google_compute_instance" "blockchain-dev" {
   name         = var.gcs_instance_name
   machine_type = var.instance_machine_type
