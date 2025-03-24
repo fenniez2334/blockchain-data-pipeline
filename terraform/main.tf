@@ -69,7 +69,7 @@ resource "google_compute_instance" "blockchain-dev" {
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
-    email  = google_service_account.blockchain_sa.email
+    email  = "${var.gcs_service_account_name}@${var.project}.iam.gserviceaccount.com"
     scopes = ["cloud-platform"]
   }
 
@@ -87,6 +87,10 @@ resource "google_compute_instance" "blockchain-dev" {
   deletion_protection = false                           # Deletion protection is disabled
 }
 
+output "vm_external_ip" {
+  description = "External IP address of the VM instance"
+  value       = google_compute_instance.blockchain-dev.network_interface[0].access_config[0].nat_ip
+}
 
 
 

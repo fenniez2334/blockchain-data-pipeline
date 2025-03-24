@@ -24,7 +24,24 @@ Please provide the service account the permissions below (sorted by name):
 4. BigQuery User
 5. Compute Admin
 6. Dataproc Administrator
-7. Storage Admin
-8. Storage Object Admin
+7. Service Account User
+8. Storage Admin
+9. Storage Object Admin
 ```
 Generate private key (json) for `blockchain-pipeline-sa` and save it locally under: `~/.gcp/gcp_creds.json`
+
+run 
+```
+terraform init
+terraform plan
+terraform apply
+```
+we want to automatically update VM instance external IP in the config file. We created `update_ssh_config.sh` to handle this task.
+To make the script executable, run the following command:
+```
+chmod +x update_ssh_config.sh
+```
+Then, we can automate this by chaining it with `terraform apply`:
+```bash
+terraform apply -auto-approve && ./update_ssh_config.sh
+```
