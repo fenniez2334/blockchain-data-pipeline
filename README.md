@@ -37,7 +37,7 @@ terraform plan
 terraform apply
 ```
 we want to automatically update VM instance external IP in the config file. We created `update_ssh_config.sh` to handle this task.
-To make the script executable, run the following command:
+To make the script executable, run the following bash command:
 ```
 chmod +x update_ssh_config.sh
 ```
