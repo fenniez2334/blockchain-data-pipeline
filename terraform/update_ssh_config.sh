@@ -7,15 +7,15 @@ EXTERNAL_IP=$(terraform output -raw vm_external_ip)
 SSH_CONFIG=~/.ssh/config
 
 # Check if the host config already exists in the file
-if grep -q "Host blockchain-data-pipeline" "$SSH_CONFIG"; then
+if grep -q "Host blockchain-dev" "$SSH_CONFIG"; then
     # Update the existing HostName with the new IP
-    sed -i.bak "/^Host blockchain-data-pipeline$/,/^$/ s/^    HostName.*/    HostName $EXTERNAL_IP/" "$SSH_CONFIG"
+    sed -i.bak "/^Host blockchain-dev$/,/^$/ s/^    HostName.*/    HostName $EXTERNAL_IP/" "$SSH_CONFIG"
     echo "Updated existing HostName with new IP: $EXTERNAL_IP"
 else
     # Append the host config if it doesn't exist
     cat <<EOL >> "$SSH_CONFIG"
 
-Host blockchain-data-pipeline
+Host blockchain-dev
     HostName $EXTERNAL_IP
     User fenniez
     IdentityFile ~/.ssh/gcp
