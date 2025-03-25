@@ -63,9 +63,9 @@ resource "google_compute_instance" "blockchain-dev" {
     }
   }
 
-  metadata = {
-    enable-oslogin = "TRUE"
-  }
+  # metadata = {
+  #   enable-oslogin = "TRUE"
+  # }
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
