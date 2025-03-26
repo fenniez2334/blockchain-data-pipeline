@@ -7,8 +7,21 @@ This project builds scalable data pipelines for ingesting, processing, and analy
 
 ## Step-by-Step Execution Guide
 ### Clone this Git Repository
-* Open a bash terminal and navigate to your home directory `cd ~` 
-* clone this github repository to local drive `git clone {git-https}`
+To ensure smooth reproducibility of this project, I recommend following the steps below:
+1. Step 1: Use a Linux-Compatible Environment
+* Run the following steps in a GitBash or MinGW terminal to ensure that the process runs in a Linux-like environment.
+* If you are using a Windows system, download and install Git Bash from https://git-scm.com/downloads
+2. Step 2: Clone the Repository
+* Open a git bash terminal and navigate to your home directory `cd ~` 
+* clone this github repository under your home directory 
+```
+git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
+```
+3. Step 3: Navigate to project directory
+```
+cd blockchain-data-pipeline
+```
+
 ### Setup GCP
 * Create GCP Account, go to: https://console.cloud.google.com/
 * Setup New Project and write down your Project ID.
@@ -31,10 +44,35 @@ Project ID: blockchain-data-pipeline
 8. Storage Admin
 9. Storage Object Admin
 ```
-* Generate private key (json) for `blockchain-pipeline-sa` and save it locally under: `~/keys/gcp_creds.json`
+* Enable these APIs for your project:
+- https://console.cloud.google.com/apis/library/iam.googleapis.com
+- https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com
+
+### Set Up Google Cloud Service Account Credentials
+1. Step 1: Access Google Cloud Console
+* Go to https://console.cloud.google.com/iam-admin/serviceaccounts
+* Locate and select your service account `blockchain-pipeline-sa` 
+2. Step 2: Generate a New Key
+* Under the `keys` section: click on `add key` --> select `create new key` --> choose `JSON` as key type --> click `create`
+3. Step 3: Download and Rename the Key
+* Download the Service Account credential file, rename it to `gcp_creds.json`
+4. Step 4: Move the Key to the Project Directory
+* Place the renamed key file in the following directory within your project: 
+```
+blockchain-data-pipeline/keys/gcp_creds.json
+```
+5. Step 5: Set environment variable to point to your downloaded GCP keys:
+```
+export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.json"
+
+# Refresh token/session, and verify authentication
+gcloud auth application-default login
+```
+
 
 ### Terraform as Infrastructure-as-Code(IaC) Tool
 * Download and install Terraform by this link: https://www.terraform.io/downloads
+* Put it to a folder in `PATH`, check this instruction: https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7
 * navigate to your home directory `cd ~` 
 * located to `terraform` folder using `cd blockchain-data-pipeline` and `cd terraform`
 * `main.td` will automatically generate the following resouces:
