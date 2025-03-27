@@ -120,6 +120,8 @@ cat gcp.pub
 * username: fenniez
 * key is our generated public key + username at the end
 * copy this key and paste it in `google cloud ssh keys` and click `save` botton.
+
+### Creating SSH config file
 * In previous steps, the `update_ssh_config.sh` create config file which includes the following settings:
 ```
 Host blockchain-dev
@@ -127,11 +129,80 @@ Host blockchain-dev
     User fenniez
     IdentityFile ~/.ssh/gcp
 ```
-* Later, use `ssh blockchain-dev` to ssh into the google VM.
+* Later, use `ssh blockchain-dev` or `ssh -i ~/.ssh/gcp fenniez@externalIP ` to ssh into the google VM.
 * Enable ssh with VS Code by installing Remote-SSH plugin and connecting to the remote host using the above configuration file. The instructions are .......
 
 ### Setup environment on VM
+* Run this first in your SSH session: sudo apt update && sudo apt -y upgrade
+* Python 3 (e.g. installed with Anaconda) -- Installing Anaconda
+download and install 
+Anaconda 3.12: `wget https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh`
+Anaconda 3.9: `wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh`
+Use `bash Anaconda3-2021.11-Linux-x86_64.sh` to install anaconda
+use `which python` to check the location of python
+* Google Cloud SDK (gcloud has already installed in gcp VM instance, use `gcloud --version` to check its existence)
+* Installing Docker
+use `sudo apt-get update` to fetch the list of packages, update install
+next, `sudo apt-get install docker.io`
+next, run Docker commands without sudo: `sudo groupadd docker` # add the docker group if it doesn't already exist
+next, add the connected user $USER to the docker group: `sudo gpasswd -a $USER docker`
+next, restart the docker daemon: `sudo service docker restart`
+finally, test docker installation: `docker run hello-world`
+* install docker-compose
+Go to https://github.com/docker/compose/releases, find the lastest version `docker-compose-linux-x86_64`
+create `bin` folder to put all the executable files: `mkdir bin`
+go to bin, `cd bin/`
+Copy the link address: `wget https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-x86_64 -O docker-compose`
+use `chmod +x docker-compose` to make it executable
+we want to execute it from any directory, add it to path variable
+use `nano .bashrc` to open file, go to the end, then add the /bin directory to our path
+```
+export PATH="${HOME}/bin:${PATH}"
+```
+use `ctrl + o` to save it and `ctrl + x` to exit this file
+test with `docker-compose version` to check if it is working
 
+* clone Git repo
+```
+git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
+```
+
+* Accessing the remote machine with VS Code and SSH remote
+install `Remote - SSH` extensions in VS Code
+click the `Open a Remote Window` at the left bottom of VS code
+select `Connect to Host...`, then pick our VM instance name
+
+* Installing pgcli
+use `pip install pgcli` or `conda install -c conda-forge pgcli` and `pip install -U mycli`
+test with `pgcli -h localhost -U root -d database_name` pgcli connect to postgres
+once linked, run `\dt` to get schema
+
+* Port-forwarding with VS code: connecting to pgAdmin and Jupyter from the local computer
+go to `PORTS` section, click `forward a port`, eg: 5432 -- postgreSQL, 8080 -- pgadmin
+go to the specific directory and use `jupyter notebook`, port 8888 --jupyter notebook
+* Installing Terraform
+Download and install Terraform by this link: https://www.terraform.io/downloads
+select linux, amd64 version and copy the download link
+go to `~/bin` then use `wget https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip`
+install unzip `sudo apt-get install unzip`
+unzip it `unzip terraform_1.11.3_linux_amd64.zip`
+remove zip file `rm terraform_1.11.3_linux_amd64.zip`
+test with `terraform -version`
+
+* Using sftp for putting the credentials to the remote machine
+go to the local folder stores the gcp credentials `blockchain-data-pipeline/keys/gcp_creds.json`
+use `sftp blockchain-dev` connect to VM blockchain-dev
+`mkdir key` create key folder in VM
+`put gcp_creds.json` -- upload gcp_creds.json to VM key/gcp_creds.json
+
+* setup google application credentials:
+```
+export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp_creds.json
+```
+* use json file to authanticate our CLI
+```
+gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+```
 
 
 

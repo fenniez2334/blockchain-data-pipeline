@@ -38,6 +38,20 @@ resource "google_bigquery_dataset" "gcp_dataset" {
   location = var.location
 }
 
+
+# We create a public IP address for our google compute instance to utilize
+resource "google_compute_address" "static" {
+  name       = "vm-public-address"
+  project    = var.project
+  region     = var.region
+  depends_on = [google_compute_firewall.ssh]
+}
+
+resource "google_compute_network" "vpc_network" {
+  name = "my-network"
+}
+
+
 resource "google_compute_instance" "blockchain-dev" {
   name         = var.gcs_instance_name
   machine_type = var.instance_machine_type
@@ -47,7 +61,7 @@ resource "google_compute_instance" "blockchain-dev" {
   boot_disk {
     initialize_params {
       image = var.boot_disk_image_type  # Ubuntu 20.04 LTS image
-      size  = 30                                             # Disk size in GB
+      size  = 40                                             # Disk size in GB
       type  = "pd-balanced"                                  # Balanced persistent disk
     }
   }
@@ -58,14 +72,18 @@ resource "google_compute_instance" "blockchain-dev" {
     network_ip = null                     # Primary internal IP address
     access_config {
       // Assigning ephemeral external IP
-      nat_ip       = null
+      nat_ip       = google_compute_address.static.address
       network_tier = "PREMIUM"                     # Network tier
     }
   }
+  
+  # Ensure firewall rule is provisioned before server, so that SSH doesn't fail.
+  depends_on = [google_compute_firewall.ssh]
 
-  # metadata = {
-  #   enable-oslogin = "TRUE"
-  # }
+  metadata = {
+    ssh-keys = "${var.user}:${file(var.publickeypath)}"
+  }
+
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
@@ -87,10 +105,23 @@ resource "google_compute_instance" "blockchain-dev" {
   deletion_protection = false                           # Deletion protection is disabled
 }
 
+
+
+
+resource "google_compute_firewall" "ssh" {
+  name = "allow-ssh"
+  allow {
+    ports    = ["22"]
+    protocol = "tcp"
+  }
+  direction     = "INGRESS"
+  network       = google_compute_network.vpc_network.name
+  priority      = 1000
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["ssh"]
+}
+
 output "vm_external_ip" {
   description = "External IP address of the VM instance"
   value       = google_compute_instance.blockchain-dev.network_interface[0].access_config[0].nat_ip
 }
-
-
-

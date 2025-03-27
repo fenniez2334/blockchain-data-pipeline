@@ -52,3 +52,21 @@ variable "boot_disk_image_type" {
   description = "Boot Disk Image Type"
   default = "ubuntu-os-cloud/ubuntu-2004-focal-v20250111"
 }
+
+variable "privatekeypath" {
+  type    = string
+  default = "~/.ssh/gcp"
+}
+variable "publickeypath" {
+  type    = string
+  default = "~/.ssh/gcp.pub"
+}
+variable "repo_url" {
+  type    = string
+  default = "https://github.com/fenniez2334/blockchain-data-pipeline.git"
+}
+variable "user" {
+  type    = string
+  default = "fenniez"
+
+}
