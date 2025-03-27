@@ -131,3 +131,10 @@ Host blockchain-dev
 * Enable ssh with VS Code by installing Remote-SSH plugin and connecting to the remote host using the above configuration file. The instructions are .......
 
 ### Setup environment on VM
+
+
+
+
+
+## Contact
+If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
