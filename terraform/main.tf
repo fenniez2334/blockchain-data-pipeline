@@ -79,9 +79,6 @@ resource "google_compute_instance" "blockchain-dev" {
       network_tier = "PREMIUM"                     # Network tier
     }
   }
-  
-  # Ensure firewall rule is provisioned before server, so that SSH doesn't fail.
-  depends_on = [google_compute_firewall.ssh]
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
@@ -101,6 +98,9 @@ resource "google_compute_instance" "blockchain-dev" {
   }
 
   deletion_protection = false                           # Deletion protection is disabled
+
+  # Ensure firewall rule is provisioned before server, so that SSH doesn't fail.
+  depends_on = [google_compute_firewall.ssh]
 
   metadata = {
     ssh-keys = "${var.user}:${file(var.publickeypath)}"
