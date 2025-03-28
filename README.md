@@ -40,9 +40,10 @@ Project ID: blockchain-data-pipeline
 4. BigQuery User
 5. Compute Admin
 6. Dataproc Administrator
-7. Service Account User
-8. Storage Admin
-9. Storage Object Admin
+7. Editor
+8. Service Account User
+9. Storage Admin
+10. Storage Object Admin
 ```
 * Enable these APIs for your project:
 - https://console.cloud.google.com/apis/library/iam.googleapis.com
