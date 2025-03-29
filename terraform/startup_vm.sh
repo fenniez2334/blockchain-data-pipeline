@@ -2,8 +2,6 @@
 
 echo "-------------------------START SETUP---------------------------"
 
-set -e
-
 echo "Updating system..."
 sudo apt update && sudo apt -y upgrade
 
@@ -23,10 +21,6 @@ sudo groupadd docker
 sudo gpasswd -a $USER docker
 newgrp docker
 
-# Enable Docker service
-sudo systemctl enable docker
-sudo systemctl start docker
-
 echo "Installing Docker-Compose..."
 mkdir -p $HOME/bin
 cd $HOME/bin
@@ -36,10 +30,6 @@ chmod +x docker-compose
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
-echo "Cloning GitHub repo..."
-cd $HOME
-git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
-
 echo "Installing pgcli and mycli..."
 conda install -c conda-forge -y pgcli
 pip install -U mycli
@@ -47,10 +37,8 @@ pip install -U mycli
 echo "Installing Terraform..."
 cd $HOME/bin
 wget https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip
-sudo apt-get install -y unzip
 unzip terraform_1.11.3_linux_amd64.zip
 rm terraform_1.11.3_linux_amd64.zip
 
 echo "Setup completed successfully!"
 echo "-------------------------END SETUP---------------------------"
-set +e

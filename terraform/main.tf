@@ -115,7 +115,6 @@ resource "google_compute_instance" "blockchain-dev" {
     }
     inline = [
       "git clone https://github.com/fenniez2334/blockchain-data-pipeline.git"
-      # "cd blockchain-data-pipeline/terraform && chmod +x startup_vm.sh && bash startup_vm.sh || echo 'Startup script failed'"
     ]
   }
 }
