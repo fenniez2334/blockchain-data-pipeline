@@ -51,7 +51,6 @@ resource "google_compute_network" "vpc_network" {
   name = "my-network"
 }
 
-
 resource "google_compute_instance" "blockchain-dev" {
   name         = var.gcs_instance_name
   machine_type = var.instance_machine_type

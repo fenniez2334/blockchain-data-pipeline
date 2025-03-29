@@ -1,10 +1,7 @@
-metadata_startup_script = <<-EOF
 #!/bin/bash
 
 echo "-------------------------START SETUP---------------------------"
 
-# Log everything to a file for debugging
-exec > /tmp/startup-script.log 2>&1
 set -e
 
 echo "Updating system..."
@@ -54,4 +51,4 @@ rm terraform_1.11.3_linux_amd64.zip
 
 echo "Setup completed successfully!"
 echo "-------------------------END SETUP---------------------------"
-EOF
+set +e
