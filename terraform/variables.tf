@@ -55,11 +55,11 @@ variable "boot_disk_image_type" {
 
 variable "privatekeypath" {
   type    = string
-  default = "/c/Users/feife/.ssh/gcp"
+  default = "~/.ssh/gcp"
 }
 variable "publickeypath" {
   type    = string
-  default = "/c/Users/feife/.ssh/gcp.pub"
+  default = "~/.ssh/gcp.pub"
 }
 variable "repo_url" {
   type    = string

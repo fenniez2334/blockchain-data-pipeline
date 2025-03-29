@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.83"
+      version = "6.17.0"
     }
   }
 }
@@ -116,24 +116,19 @@ echo "-------------------------START SETUP---------------------------"
 exec > /tmp/startup-script.log 2>&1
 set -e
 
-# Update and upgrade system
+echo "Updating system..."
 sudo apt update && sudo apt -y upgrade
 
-# Install dependencies
+echo "Installing dependencies..."
 sudo apt-get install -y wget curl git apt-transport-https ca-certificates gnupg software-properties-common unzip
 
-# -----------------------------------------------
-# 1. Install Anaconda
-# -----------------------------------------------
+echo "Installing Anaconda..."
 wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
 bash Anaconda3-2021.11-Linux-x86_64.sh -b -p $HOME/anaconda3
 
-# -----------------------------------------------
-# 2. Install Docker
-# -----------------------------------------------
+echo "Installing Docker..."
 sudo apt-get update
 sudo apt-get install -y docker.io
-# Add user to docker group to avoid sudo for Docker commands
 sudo groupadd docker
 sudo gpasswd -a $USER docker
 newgrp docker
@@ -142,43 +137,31 @@ newgrp docker
 sudo systemctl enable docker
 sudo systemctl start docker
 
-# -----------------------------------------------
-# 3. Install Docker-Compose
-# -----------------------------------------------
+echo "Installing Docker-Compose..."
 mkdir -p $HOME/bin
 cd $HOME/bin
 wget https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-x86_64 -O docker-compose
 chmod +x docker-compose
-# Add ~/bin to PATH
+
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
-# -----------------------------------------------
-# 4. Clone GitHub Repo
-# -----------------------------------------------
+echo "Cloning GitHub repo..."
 cd $HOME
 git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
 
-# -----------------------------------------------
-# 5. Install pgcli and mycli
-# -----------------------------------------------
+echo "Installing pgcli and mycli..."
 conda install -c conda-forge -y pgcli
 pip install -U mycli
 
-# -----------------------------------------------
-# 6. Install Terraform
-# -----------------------------------------------
+echo "Installing Terraform..."
 cd $HOME/bin
 wget https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip
 sudo apt-get install -y unzip
 unzip terraform_1.11.3_linux_amd64.zip
 rm terraform_1.11.3_linux_amd64.zip
 
-# -----------------------------------------------
-# Finish setup
-# -----------------------------------------------
 echo "Setup completed successfully!"
-
 echo "-------------------------END SETUP---------------------------"
 EOF
 
