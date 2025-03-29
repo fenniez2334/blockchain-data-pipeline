@@ -50,16 +50,16 @@ variable "instance_machine_type" {
 
 variable "boot_disk_image_type" {
   description = "Boot Disk Image Type"
-  default = "ubuntu-os-cloud/ubuntu-2004-focal-v20250111"
+  default = "ubuntu-2204-jammy-v20240515"
 }
 
 variable "privatekeypath" {
   type    = string
-  default = "~/.ssh/gcp"
+  default = "/c/Users/feife/.ssh/gcp"
 }
 variable "publickeypath" {
   type    = string
-  default = "~/.ssh/gcp.pub"
+  default = "/c/Users/feife/.ssh/gcp.pub"
 }
 variable "repo_url" {
   type    = string

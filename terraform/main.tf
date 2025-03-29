@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "6.17.0"
+      version = "~> 4.83"
     }
   }
 }
@@ -113,7 +113,8 @@ metadata_startup_script = <<-EOF
 echo "-------------------------START SETUP---------------------------"
 
 # Log everything to a file for debugging
-exec > /var/log/startup-script.log 2>&1
+exec > /tmp/startup-script.log 2>&1
+set -e
 
 # Update and upgrade system
 sudo apt update && sudo apt -y upgrade
