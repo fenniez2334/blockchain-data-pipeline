@@ -134,6 +134,14 @@ Host blockchain-dev
 * Enable ssh with VS Code by installing Remote-SSH plugin and connecting to the remote host using the above configuration file. The instructions are .......
 
 ### Setup environment on VM
+
+* clone Git repo
+```
+git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
+```
+Then run `cd blockchain-data-pipeline/terraform && chmod +x startup_vm.sh && bash startup_vm.sh || echo 'Startup script failed'` to run startup_script.sh to install necessary software in VM.
+
+* Below is the main steps in startup_script.sh:
 * Run this first in your SSH session: sudo apt update && sudo apt -y upgrade
 * Python 3 (e.g. installed with Anaconda) -- Installing Anaconda
 download and install 
@@ -162,11 +170,6 @@ export PATH="${HOME}/bin:${PATH}"
 ```
 use `ctrl + o` to save it and `ctrl + x` to exit this file
 test with `docker-compose version` to check if it is working
-
-* clone Git repo
-```
-git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
-```
 
 * Accessing the remote machine with VS Code and SSH remote
 install `Remote - SSH` extensions in VS Code
