@@ -16,27 +16,27 @@ provider "google" {
 }
 
 
-resource "google_storage_bucket" "gcp-bucket" {
-  name          = var.gcs_bucket_name
-  location      = var.location
-  force_destroy = true
+# resource "google_storage_bucket" "gcp-bucket" {
+#   name          = var.gcs_bucket_name
+#   location      = var.location
+#   force_destroy = true
 
 
-  lifecycle_rule {
-    condition {
-      # this age is used in days  
-      age = 1
-    }
-    action {
-      type = "AbortIncompleteMultipartUpload"
-    }
-  }
-}
+#   lifecycle_rule {
+#     condition {
+#       # this age is used in days  
+#       age = 1
+#     }
+#     action {
+#       type = "AbortIncompleteMultipartUpload"
+#     }
+#   }
+# }
 
-resource "google_bigquery_dataset" "gcp_dataset" {
-  dataset_id = var.bq_dataset_name
-  location = var.location
-}
+# resource "google_bigquery_dataset" "gcp_dataset" {
+#   dataset_id = var.bq_dataset_name
+#   location = var.location
+# }
 
 
 # We create a public IP address for our google compute instance to utilize
@@ -104,6 +104,19 @@ resource "google_compute_instance" "blockchain-dev" {
   metadata = {
     ssh-keys = "${var.user}:${file(var.publickeypath)}"
     startup-script = file(var.startup-script)
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = var.user
+      private_key = file(var.privatekeypath)
+      host        = google_compute_address.static.address
+    }
+    inline = [
+      "git clone https://github.com/fenniez2334/blockchain-data-pipeline.git"
+      # "cd blockchain-data-pipeline/terraform && chmod +x startup_vm.sh && bash startup_vm.sh || echo 'Startup script failed'"
+    ]
   }
 }
 
