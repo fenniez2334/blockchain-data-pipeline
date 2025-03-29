@@ -68,5 +68,9 @@ variable "repo_url" {
 variable "user" {
   type    = string
   default = "fenniez"
+}
 
+variable "startup-script" {
+  description = "Startup Script"
+  default = "startup_vm.sh"
 }
