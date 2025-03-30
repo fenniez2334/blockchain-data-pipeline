@@ -17,14 +17,12 @@ $HOME/anaconda3/bin/conda init
 # Reload bashrc to apply changes
 source ~/.bashrc
 
-sleep 120
-
 echo "Installing Docker..."
 sudo apt-get update
 sudo apt-get install -y docker.io
 sudo groupadd docker
 sudo gpasswd -a $USER docker
-newgrp docker
+
 
 echo "Installing Docker-Compose..."
 mkdir -p $HOME/bin
