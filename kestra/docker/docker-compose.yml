@@ -1,4 +1,24 @@
+volumes:
+  postgres-data:
+    driver: local
+  kestra-data:
+    driver: local
+
 services:
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: k3str4
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
   kestra:
     image: kestra/kestra:v0.20.7
     pull_policy: always
@@ -8,6 +28,7 @@ services:
       - kestra-data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/kestra-wd:/tmp/kestra-wd
+      - ../flows:/app/flows # <-- Mount the flows directory
     environment:
       KESTRA_CONFIGURATION: |
         datasources:
