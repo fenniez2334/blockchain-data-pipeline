@@ -36,14 +36,15 @@ Project ID: blockchain-data-pipeline
 ```
 1. BigQuery Admin
 2. BigQuery Data Editor
-3. BigQuery Job User
-4. BigQuery User
-5. Compute Admin
-6. Dataproc Administrator
-7. Editor
-8. Service Account User
-9. Storage Admin
-10. Storage Object Admin
+3. BigQuery Data Viewer
+4. BigQuery Job User
+5. BigQuery User
+6. Compute Admin
+7. Dataproc Administrator
+8. Editor
+9. Service Account User
+10. Storage Admin
+11. Storage Object Admin
 ```
 * Enable these APIs for your project:
 - https://console.cloud.google.com/apis/library/iam.googleapis.com
@@ -199,10 +200,14 @@ use `sftp blockchain-dev` connect to VM blockchain-dev
 `mkdir key` create key folder in VM
 `put gcp_creds.json` -- upload gcp_creds.json to VM key/gcp_creds.json
 
-* setup google application credentials:
+### setup google application credentials:
+Create an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` and assign it to the path of your json credentials file, which should be $HOME/.google/credentials/ . Assuming you're running bash:
+1. Open `.bashrc` using `nano ~/.bashrc`
+2. At the end of the file, add the following line:
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp_creds.json
 ```
+3. Exit nano with `Ctrl + X`. Run `source ~/.bashrc`to activate the environment variable.
 * use json file to authanticate our CLI
 ```
 gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
