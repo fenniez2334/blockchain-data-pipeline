@@ -77,12 +77,12 @@ pluginDefaults:
 triggers:
   - id: blocks_schedule
     type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 9 1 * *"
+    cron: "0 12 1 * *"
     inputs:
       data_type: blocks
 
   - id: transactions_schedule
     type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 10 1 * *"
+    cron: "0 13 1 * *"
     inputs:
       data_type: transactions
