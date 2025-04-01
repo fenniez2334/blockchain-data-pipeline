@@ -8,21 +8,8 @@ inputs:
     values: [blocks, transactions]
     defaults: blocks
 
-  - id: year
-    type: SELECT
-    displayName: Select year
-    values: ["2025", "2024"]
-    defaults: "2025"
-    allowCustomValue: true 
-
-  - id: month
-    type: SELECT
-    displayName: Select month
-    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
-    defaults: "01"
-
 variables:
-  file: "{{inputs.data_type}}/{{inputs.year}}/{{inputs.month}}/btc_{{inputs.year}}{{inputs.month}}-*.parquet"
+  file: "{{inputs.data_type}}/{{trigger.date | date('yyyy')}}/{{trigger.date | date('MM')}}/btc_{{trigger.date | date('yyyyMM')}}-*.parquet"
   gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/{{vars.file}}"
 
 tasks:
@@ -39,18 +26,18 @@ tasks:
       - id: bq_query_blocks
         type: io.kestra.plugin.gcp.bigquery.Query
         projectId: "{{kv('GCP_PROJECT_ID')}}"
-        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{inputs.year}}{{inputs.month}}"
+        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         sql: |
           SELECT *
           FROM `bigquery-public-data.crypto_bitcoin.blocks`
-          WHERE DATE(timestamp_month) = '{{inputs.year}}-{{inputs.month}}-01'
+          WHERE DATE(timestamp_month) = '{{trigger.date | date('yyyy-MM')}}-01'
         writeDisposition: WRITE_TRUNCATE
 
       - id: extract_to_gcs_blocks
         type: io.kestra.plugin.gcp.bigquery.ExtractToGcs
         destinationUris:
           - "{{render(vars.gcs_file)}}"
-        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{inputs.year}}{{inputs.month}}"
+        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         format: PARQUET
 
   - id: if_transactions_data
@@ -60,18 +47,18 @@ tasks:
       - id: bq_query_transactions
         type: io.kestra.plugin.gcp.bigquery.Query
         projectId: "{{kv('GCP_PROJECT_ID')}}"
-        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{inputs.year}}{{inputs.month}}"
+        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         sql: |
           SELECT *
           FROM `bigquery-public-data.crypto_bitcoin.transactions`
-          WHERE DATE(block_timestamp_month) = '{{inputs.year}}-{{inputs.month}}-01'
+          WHERE DATE(block_timestamp_month) = '{{trigger.date | date('yyyy-MM')}}-01'
         writeDisposition: WRITE_TRUNCATE
 
       - id: extract_to_gcs_transactions
         type: io.kestra.plugin.gcp.bigquery.ExtractToGcs
         destinationUris:
           - "{{render(vars.gcs_file)}}"
-        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{inputs.year}}{{inputs.month}}"
+        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         format: PARQUET
 
   - id: purge_files
@@ -87,3 +74,15 @@ pluginDefaults:
       location: "{{kv('GCP_LOCATION')}}"
       bucket: "{{kv('GCP_BUCKET_NAME')}}"
 
+triggers:
+  - id: blocks_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"
+    inputs:
+      data_type: blocks
+
+  - id: transactions_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 10 1 * *"
+    inputs:
+      data_type: transactions
