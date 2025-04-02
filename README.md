@@ -243,7 +243,7 @@ source ~/.bashrc
 ```
 remove the archive using `rm spark-3.3.2-bin-hadoop3.tgz`.
 
-3. Install PySpark
+3. Setup PySpark
 Add PySpark to `PYTHONPATH`:
 ```
 echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
