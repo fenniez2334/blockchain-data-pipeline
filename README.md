@@ -57,11 +57,11 @@ Project ID: blockchain-data-pipeline
 2. Step 2: Generate a New Key
 * Under the `keys` section: click on `add key` --> select `create new key` --> choose `JSON` as key type --> click `create`
 3. Step 3: Download and Rename the Key
-* Download the Service Account credential file, rename it to `gcp_creds.json`
+* Download the Service Account credential file, rename it to `gcp-creds.json`
 4. Step 4: Move the Key to the Project Directory
 * Place the renamed key file in the following directory within your project: 
 ```
-blockchain-data-pipeline/keys/gcp_creds.json
+blockchain-data-pipeline/keys/gcp-creds.json
 ```
 5. Step 5: Set environment variable to point to your downloaded GCP keys:
 ```
@@ -195,19 +195,24 @@ remove zip file `rm terraform_1.11.3_linux_amd64.zip`
 test with `terraform -version`
 
 * Using sftp for putting the credentials to the remote machine
-go to the local folder stores the gcp credentials `blockchain-data-pipeline/keys/gcp_creds.json`
+go to the local folder stores the gcp credentials `blockchain-data-pipeline/keys/gcp-creds.json`
 use `sftp blockchain-dev` connect to VM blockchain-dev
 `mkdir key` create key folder in VM
-`put gcp_creds.json` -- upload gcp_creds.json to VM key/gcp_creds.json
+`put gcp-creds.json key/gcp-creds.json` -- upload gcp-creds.json to VM key/gcp-creds.json
 
 ### setup google application credentials:
 Create an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` and assign it to the path of your json credentials file, which should be $HOME/.google/credentials/ . Assuming you're running bash:
 1. Open `.bashrc` using `nano ~/.bashrc`
 2. At the end of the file, add the following line:
 ```
-export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp_creds.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp-creds.json
 ```
 3. Exit nano with `Ctrl + X`. Run `source ~/.bashrc`to activate the environment variable.
+Or, use `echo` to do the same setup:
+```
+echo 'export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp-creds.json' >> ~/.bashrc
+source ~/.bashrc
+```
 * use json file to authanticate our CLI
 ```
 gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
@@ -249,6 +254,11 @@ Add PySpark to `PYTHONPATH`:
 echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
 echo 'export PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"' >> ~/.bashrc
 source ~/.bashrc
+```
+### connect to Google Cloud Storage
+Download the jar for connecting to GCS to any location (e.g. the lib folder):
+```
+gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hadoop3-2.2.5.jar 
 ```
 
 ## Contact
