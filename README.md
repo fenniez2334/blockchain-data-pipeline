@@ -213,8 +213,43 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp_creds.json
 gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
 ```
 
+### Install Spark
+1. Install Java
+create and navigate to the spark folder: `mkdir -p ~/spark && cd ~/spark` 
+download and extract OpenJDK 11:
+```
+wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+tar xzfv openjdk-11.0.2_linux-x64_bin.tar.gz
+```
+set up `JAVA_HOME` and update `.bashrc`:
+```
+echo 'export JAVA_HOME="$HOME/spark/jdk-11.0.2"' >> ~/.bashrc
+echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+remove the archive using `rm openjdk-11.0.2_linux-x64_bin.tar.gz`.
+2. Install Spark
+Download and unpack Spark using the following scripts
+```
+cd ~/spark
+wget https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
+tar xzfv spark-3.3.2-bin-hadoop3.tgz
+```
+next, add the spark to `PATH`:
+```
+echo 'export SPARK_HOME="$HOME/spark/spark-3.3.2-bin-hadoop3"' >> ~/.bashrc
+echo 'export PATH="$SPARK_HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+remove the archive using `rm spark-3.3.2-bin-hadoop3.tgz`.
 
-
+3. Setup PySpark
+Add PySpark to `PYTHONPATH`:
+```
+echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
+echo 'export PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"' >> ~/.bashrc
+source ~/.bashrc
+```
 
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
