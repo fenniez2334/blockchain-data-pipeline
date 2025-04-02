@@ -40,5 +40,29 @@ wget https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd6
 unzip terraform_1.11.3_linux_amd64.zip
 rm terraform_1.11.3_linux_amd64.zip
 
+echo "Installing Java 11..."
+cd $HOME
+mkdir -p ~/spark && cd ~/spark
+wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+tar xzfv openjdk-11.0.2_linux-x64_bin.tar.gz
+echo 'export JAVA_HOME="$HOME/spark/jdk-11.0.2"' >> ~/.bashrc
+echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+rm openjdk-11.0.2_linux-x64_bin.tar.gz
+
+echo "Installing Spark..."
+cd $HOME/spark
+wget https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
+tar xzfv spark-3.3.2-bin-hadoop3.tgz
+echo 'export SPARK_HOME="$HOME/spark/spark-3.3.2-bin-hadoop3"' >> ~/.bashrc
+echo 'export PATH="$SPARK_HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+rm spark-3.3.2-bin-hadoop3.tgz
+
+echo "Setup PySpark..."
+echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
+echo 'export PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"' >> ~/.bashrc
+source ~/.bashrc
+
 echo "Setup completed successfully!"
 echo "-------------------------END SETUP---------------------------"
