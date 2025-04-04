@@ -255,10 +255,24 @@ echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
 echo 'export PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
-### connect to Google Cloud Storage
+### Connect to Google Cloud Storage
 Download the jar for connecting to GCS to any location (e.g. the lib folder):
 ```
 gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hadoop3-2.2.5.jar 
+```
+
+### Setup Dataproc Cluster in GCP
+use the following command to create dataproc cluster
+```
+gcloud dataproc clusters create blockchain-data-pipeline-cluster \
+    --region=us-central1 \
+    --zone=us-central1-a \  
+    --single-node \
+    --optional-components=JUPYTER,DOCKER \
+    --enable-component-gateway \
+    --machine-type=n4-standard-4 \
+    --service-account=blockchain-pipeline-sa@blockchain-data-pipeline.iam.gserviceaccount.com \
+    --scopes=https://www.googleapis.com/auth/cloud-platform
 ```
 
 ## Contact
