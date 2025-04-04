@@ -9,6 +9,7 @@ echo "Installing dependencies..."
 sudo apt-get install -y wget curl git apt-transport-https ca-certificates gnupg software-properties-common unzip
 
 echo "Installing Anaconda..."
+cd $HOME
 wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
 bash Anaconda3-2021.11-Linux-x86_64.sh -b -p $HOME/anaconda3
 # Initialize Anaconda after batch install
@@ -16,6 +17,7 @@ echo "Initializing Anaconda..."
 $HOME/anaconda3/bin/conda init
 # Reload bashrc to apply changes
 source ~/.bashrc
+rm Anaconda3-2021.11-Linux-x86_64.sh
 
 sleep 20
 
