@@ -1,5 +1,5 @@
 # blockchain-data-pipeline
-This project builds scalable data pipelines for ingesting, processing, and analyzing Bitcoin and Ethereum blockchain data from AWS Public Datasets.
+This project builds scalable data pipelines for ingesting, processing, and analyzing Bitcoin blockchain data from Google Cloud Public Datasets.
 
 ## Problem Statement
 
@@ -262,17 +262,55 @@ gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hado
 ```
 
 ### Setup Dataproc Cluster in GCP
-use the following command to create dataproc cluster
+1. use the following command to create dataproc cluster
 ```
 gcloud dataproc clusters create blockchain-data-pipeline-cluster \
     --region=us-central1 \
-    --zone=us-central1-a \  
-    --single-node \
+    --zone=us-central1-a \
+    --num-workers=0 \
     --optional-components=JUPYTER,DOCKER \
     --enable-component-gateway \
-    --machine-type=n4-standard-4 \
+    --master-machine-type=n4-standard-4 \
+    --master-boot-disk-size=100GB \
     --service-account=blockchain-pipeline-sa@blockchain-data-pipeline.iam.gserviceaccount.com \
     --scopes=https://www.googleapis.com/auth/cloud-platform
+```
+Wait for a few minutes. Once the cluster the successfully created, check the cluster using:
+```
+gcloud dataproc clusters describe blockchain-data-pipeline-cluster --region=us-central1
+```
+2. Upload the script to GCS:
+```
+gsutil cp spark_to_bigquery.py gs://blockchain-data-pipeline-bucket/code/spark_to_bigquery.py
+```
+3. Upload and Run `spark_to_bigquery.py`
+To submit your spark job:
+```
+gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/spark_to_bigquery.py \
+    --cluster=blockchain-data-pipeline-cluster \
+    --region=us-central1 \
+    --properties=spark.sql.catalogImplementation=in-memory \
+    -- \
+    --bucket=dataproc-temp-us-central1-711665363740-jnogpesb \
+    --input_blocks=gs://blockchain-data-pipeline-bucket/blocks/2025/*/* \
+    --input_transactions=gs://blockchain-data-pipeline-bucket/transactions/2025/01/* \
+    --output1=blockchain-data-pipeline.bc_bitcoin.blocks \
+    --output2=blockchain-data-pipeline.bc_bitcoin.transactions
+
+gcloud dataproc clusters create blockchain-data-pipeline-cluster \
+--region=us-central1 \
+--image-version=2.2-ubuntu22 \
+--zone=us-central1-a \
+--num-workers=2 \
+--worker-machine-type=n2-standard-2 \
+--master-machine-type=n2-standard-2 \
+--master-boot-disk-size=100GB \
+--worker-boot-disk-size=100GB \
+--service-account=blockchain-pipeline-sa@blockchain-data-pipeline.iam.gserviceaccount.com \
+--scopes=https://www.googleapis.com/auth/cloud-platform \
+--optional-components=JUPYTER,DOCKER \
+--enable-component-gateway
+
 ```
 
 ## Contact
