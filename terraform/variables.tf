@@ -20,7 +20,7 @@ variable "location" {
 
 variable "bq_dataset_name" {
   description = "My BigQuery Dataset Name"
-  default = "bc_dataset"
+  default = "bc_bitcoin"
 }
 
 variable "gcs_bucket_name" {
