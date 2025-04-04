@@ -37,8 +37,8 @@ df_blocks = spark.read\
 df_transactions = spark.read\
                     .parquet(input_transactions)
 
-df_blocks.registerTempTable('blocks')
-df_transactions.registerTempTable('transactions')
+# df_blocks.registerTempTable('blocks')
+# df_transactions.registerTempTable('transactions')
 
 df_blocks.write.format('bigquery') \
     .option('table', output1) \
