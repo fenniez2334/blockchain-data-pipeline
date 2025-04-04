@@ -5,10 +5,10 @@ import argparse
 
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, col
+from pyspark.sql.functions import explode
+
 
 parser = argparse.ArgumentParser()
-
 
 parser.add_argument('--input_blocks', required=True)
 parser.add_argument('--input_transactions', required=True)
