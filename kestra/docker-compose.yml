@@ -20,7 +20,7 @@ services:
       retries: 10
 
   kestra:
-    image: kestra/kestra:v0.20.7
+    image: kestra/kestra:latest
     pull_policy: always
     user: "root"
     command: server standalone
@@ -28,7 +28,7 @@ services:
       - kestra-data:/app/storage
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/kestra-wd:/tmp/kestra-wd
-      - ../flows:/local_flows # <-- Mount the flows directory
+      - ./flows:/local_flows # <-- Mount the flows directory
     environment:
       KESTRA_CONFIGURATION: |
         datasources:
@@ -55,15 +55,15 @@ services:
             tmpDir:
               path: /tmp/kestra-wd/tmp
           url: http://localhost:8080/
-        microant:
+        micronaut:
           io:
             watch:
               enabled: true
-              path:
+              paths:
                 - /local_flows
     ports:
       - "8080:8080"
       - "8081:8081"
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
