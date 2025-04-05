@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: staging
+    database: blockchain-data-pipeline
+    schema: bc_bitcoin
+    
+    tables:
+      - name: blocks
+      - name: transactions
+      - name: inputs
+      - name: outputs

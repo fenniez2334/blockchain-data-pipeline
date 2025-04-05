@@ -1,0 +1,34 @@
+{{ config(materialized='view') }}
+
+with source as (
+    select * 
+    from {{ source('bc_bitcoin', 'transactions') }}
+    where `hash` is not null
+),
+
+renamed as (
+    select
+        hash as transaction_hash,
+        size,
+        virtual_size,
+        version,
+        lock_time,
+        block_hash,
+        block_number,
+        block_timestamp,
+        block_timestamp_month,
+        input_count,
+        output_count,
+        input_value,
+        output_value,
+        is_coinbase,
+        fee
+    from source
+)
+
+select * 
+from renamed
+
+{% if var('is_test_run', default=true) %}
+limit 30
+{% endif %}
