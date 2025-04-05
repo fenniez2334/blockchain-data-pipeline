@@ -8,7 +8,7 @@ with source as (
 
 renamed as (
     select
-        hash as transaction_hash,
+        `hash` as transaction_hash,
         size,
         virtual_size,
         version,
