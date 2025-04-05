@@ -304,6 +304,10 @@ gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/sp
     --out_outputs=blockchain-data-pipeline.bc_bitcoin.outputs
 
 ```
+4. remove Dataproc clusters:
+```
+gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-central1
+```
 
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
