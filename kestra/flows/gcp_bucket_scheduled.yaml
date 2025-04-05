@@ -1,4 +1,4 @@
-id: gcp_bucket
+id: gcp_bucket_scheduled
 namespace: blockchain
 
 inputs:
