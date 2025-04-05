@@ -2,7 +2,7 @@
 
 with source as (
     select * 
-    from {{ source('bc_bitcoin', 'transactions') }}
+    from {{ source('staging', 'transactions') }}
     where `hash` is not null
 ),
 
