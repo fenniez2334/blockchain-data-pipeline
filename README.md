@@ -266,14 +266,18 @@ gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hado
 ```
 gcloud dataproc clusters create blockchain-data-pipeline-cluster \
     --region=us-central1 \
+    --image-version=2.2-ubuntu22 \
     --zone=us-central1-a \
-    --num-workers=0 \
-    --optional-components=JUPYTER,DOCKER \
-    --enable-component-gateway \
-    --master-machine-type=n4-standard-4 \
+    --num-workers=2 \
+    --worker-machine-type=n2-standard-2 \
+    --master-machine-type=n2-standard-2 \
     --master-boot-disk-size=100GB \
+    --worker-boot-disk-size=100GB \
     --service-account=blockchain-pipeline-sa@blockchain-data-pipeline.iam.gserviceaccount.com \
-    --scopes=https://www.googleapis.com/auth/cloud-platform
+    --scopes=https://www.googleapis.com/auth/cloud-platform \
+    --optional-components=JUPYTER,DOCKER \
+    --enable-component-gateway
+
 ```
 Wait for a few minutes. Once the cluster the successfully created, check the cluster using:
 ```
@@ -293,23 +297,11 @@ gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/sp
     -- \
     --bucket=dataproc-temp-us-central1-711665363740-jnogpesb \
     --input_blocks=gs://blockchain-data-pipeline-bucket/blocks/2025/*/* \
-    --input_transactions=gs://blockchain-data-pipeline-bucket/transactions/2025/01/* \
-    --output1=blockchain-data-pipeline.bc_bitcoin.blocks \
-    --output2=blockchain-data-pipeline.bc_bitcoin.transactions
-
-gcloud dataproc clusters create blockchain-data-pipeline-cluster \
---region=us-central1 \
---image-version=2.2-ubuntu22 \
---zone=us-central1-a \
---num-workers=2 \
---worker-machine-type=n2-standard-2 \
---master-machine-type=n2-standard-2 \
---master-boot-disk-size=100GB \
---worker-boot-disk-size=100GB \
---service-account=blockchain-pipeline-sa@blockchain-data-pipeline.iam.gserviceaccount.com \
---scopes=https://www.googleapis.com/auth/cloud-platform \
---optional-components=JUPYTER,DOCKER \
---enable-component-gateway
+    --input_transactions=gs://blockchain-data-pipeline-bucket/transactions/2025/*/* \
+    --out_blocks=blockchain-data-pipeline.bc_bitcoin.blocks \
+    --out_transactions=blockchain-data-pipeline.bc_bitcoin.transactions \
+    --out_inputs=blockchain-data-pipeline.bc_bitcoin.inputs \
+    --out_outputs=blockchain-data-pipeline.bc_bitcoin.outputs
 
 ```
 
