@@ -26,7 +26,7 @@ tasks:
       - id: bq_query_blocks
         type: io.kestra.plugin.gcp.bigquery.Query
         projectId: "{{kv('GCP_PROJECT_ID')}}"
-        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
+        destinationTable: "{{kv('GCP_DATASET_TEMP')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         sql: |
           SELECT *
           FROM `bigquery-public-data.crypto_bitcoin.blocks`
@@ -37,7 +37,7 @@ tasks:
         type: io.kestra.plugin.gcp.bigquery.ExtractToGcs
         destinationUris:
           - "{{render(vars.gcs_file)}}"
-        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
+        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET_TEMP')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         format: PARQUET
 
   - id: if_transactions_data
@@ -47,7 +47,7 @@ tasks:
       - id: bq_query_transactions
         type: io.kestra.plugin.gcp.bigquery.Query
         projectId: "{{kv('GCP_PROJECT_ID')}}"
-        destinationTable: "{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
+        destinationTable: "{{kv('GCP_DATASET_TEMP')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         sql: |
           SELECT *
           FROM `bigquery-public-data.crypto_bitcoin.transactions`
@@ -58,7 +58,7 @@ tasks:
         type: io.kestra.plugin.gcp.bigquery.ExtractToGcs
         destinationUris:
           - "{{render(vars.gcs_file)}}"
-        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
+        sourceTable: "{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET_TEMP')}}.btc_{{inputs.data_type}}_temp_{{trigger.date | date('yyyyMM')}}"
         format: PARQUET
 
   - id: purge_files
