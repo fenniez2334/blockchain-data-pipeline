@@ -9,6 +9,7 @@ inputs:
       - dbt build
       - dbt debug # use when running the first time to validate DB connection
 
+
 tasks:
   - id: sync
     type: io.kestra.plugin.git.SyncNamespaceFiles
@@ -33,7 +34,7 @@ tasks:
       sa.json: "{{kv('GCP_CREDS')}}"
     commands:
       - dbt deps
-      - dbt run --vars '{"is_test_run": false}'
+      - "{{ inputs.dbt_command }}"
     storeManifest:
       key: manifest.json
       namespace: "{{ flow.namespace }}"

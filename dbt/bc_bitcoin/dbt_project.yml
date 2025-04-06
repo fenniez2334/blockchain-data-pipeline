@@ -37,4 +37,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   bc_bitcoin:
+    staging:
+      +materialized: view  # or table, as you prefer
+    core:
+      +materialized: table
 
