@@ -312,6 +312,13 @@ gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-cen
 
 ### DBT
 To run full data `dbt run --vars '{"is_test_run": false}'`
+generate documentation `dbt docs generate`
+
+### Google lookerstudio
+[lookerstudio](https://lookerstudio.google.com/)
+
+### Dashboard
+https://lookerstudio.google.com/s/ri6i47C1odU
 
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
