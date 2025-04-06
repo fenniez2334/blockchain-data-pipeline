@@ -318,7 +318,7 @@ generate documentation `dbt docs generate`
 [lookerstudio](https://lookerstudio.google.com/)
 
 ### Dashboard
-https://lookerstudio.google.com/s/ri6i47C1odU
+https://lookerstudio.google.com/s/s4UwpKU3qC0
 
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
