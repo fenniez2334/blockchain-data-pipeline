@@ -309,5 +309,9 @@ gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/sp
 gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-central1
 ```
 
+
+### DBT
+To run full data `dbt run --vars '{"is_test_run": false}'`
+
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
