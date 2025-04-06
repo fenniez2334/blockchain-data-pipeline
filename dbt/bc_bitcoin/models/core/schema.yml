@@ -1,0 +1,82 @@
+
+version: 2
+
+models:
+  - name: daily_miner_metrics
+    description: "report Issuance, supply, inflation and miner revenue"
+    columns:
+      - name: date
+        data_type: date
+        description: ""
+
+      - name: issuance
+        data_type: numeric
+        description: ""
+
+      - name: circulating_supply
+        data_type: numeric
+        description: ""
+
+      - name: inflation_rate
+        data_type: numeric
+        description: ""
+
+      - name: total_miner_revenue
+        data_type: numeric
+        description: ""
+
+      - name: total_miner_fees
+        data_type: numeric
+        description: ""
+
+      - name: fee_ratio
+        data_type: numeric
+        description: ""
+
+  - name: daily_blocks_transactions
+    description: "Number of blocks and transactions per day"
+    columns:
+      - name: block_date
+        data_type: date
+        description: ""
+
+      - name: blocks_count
+        data_type: int64
+        description: ""
+
+      - name: transaction_count
+        data_type: int64
+        description: ""
+
+      - name: total_transfer_volume
+        data_type: float64
+        description: ""
+
+      - name: mean_transfer_volume
+        data_type: float64
+        description: ""
+
+      - name: biggest_transfer_volume
+        data_type: float64
+        description: ""
+
+  - name: address_type
+    description: "The address type by date and source"
+    columns:
+      - name: date
+        data_type: date
+        description: ""
+
+      - name: source
+        data_type: string
+        description: ""
+
+      - name: address_type
+        data_type: string
+        description: ""
+
+      - name: address_type_count
+        data_type: int64
+        description: ""
+
+

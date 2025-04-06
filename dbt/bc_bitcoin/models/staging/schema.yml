@@ -1,0 +1,215 @@
+version: 2
+
+sources:
+  - name: staging
+    database: blockchain-data-pipeline
+    schema: bc_bitcoin
+    
+    tables:
+      - name: blocks
+      - name: transactions
+      - name: inputs
+      - name: outputs
+
+
+models:
+  - name: stg_transactions
+    description: "Stores each transaction per block, including all inputs and outputs as nested arrays. For easier consumption, input transaction provides more details about the spending transaction."
+    columns:
+      - name: transaction_hash
+        data_type: string
+        description: "The hash of this transaction"
+
+      - name: size
+        data_type: int64
+        description: "The size of this transaction in bytes"
+
+      - name: virtual_size
+        data_type: int64
+        description: "The virtual transaction size (differs from size for witness transactions)"
+
+      - name: version
+        data_type: int64
+        description: "Protocol version specified in block which contained this transaction"
+
+      - name: lock_time
+        data_type: int64
+        description: "Earliest time that miners can include the transaction in their hashing of the Merkle root to attach it in the latest block of the blockchain"
+
+      - name: block_hash
+        data_type: string
+        description: "Hash of the block which contains this transaction"
+
+      - name: block_number
+        data_type: int64
+        description: "Number of the block which contains this transaction"
+
+      - name: block_timestamp
+        data_type: datetime
+        description: "Timestamp of the block which contains this transaction"
+
+      - name: block_timestamp_month
+        data_type: date
+        description: "Timestamp in month of the block which contains this transaction"
+
+      - name: input_count
+        data_type: int64
+        description: "The number of inputs in the transaction"
+
+      - name: output_count
+        data_type: int64
+        description: "The number of outputs in the transaction"
+
+      - name: input_value
+        data_type: numeric
+        description: "Total value of inputs in the transaction (in BTC)"
+
+      - name: output_value
+        data_type: numeric
+        description: "Total value of outputs in the transaction (in BTC)"
+
+      - name: is_coinbase
+        data_type: boolean
+        description: "True if this transaction is a coinbase transaction"
+
+      - name: fee
+        data_type: numeric
+        description: "The fee paid by this transaction"
+
+  - name: stg_blocks
+    description: "Stores each transaction per block, including all inputs and outputs as nested arrays. For easier consumption, input transaction provides more details about the spending transaction."
+    columns:
+      - name: block_hash
+        data_type: string
+        description: "Hash of this block"
+
+      - name: size
+        data_type: int64
+        description: "The size of block data in bytes"
+
+      - name: stripped_size
+        data_type: int64
+        description: "The size of block data in bytes excluding witness data"
+
+      - name: weight
+        data_type: int64
+        description: "Three times the base size plus the total size"
+
+      - name: block_number
+        data_type: int64
+        description: "The number of the block"
+
+      - name: version
+        data_type: int64
+        description: "Protocol version specified in block header"
+
+      - name: merkle_root
+        data_type: string
+        description: "The root node of a Merkle tree, where leaves are transaction hashes"
+
+      - name: timestamp
+        data_type: datetime
+        description: "Block creation timestamp specified in block header"
+
+      - name: timestamp_month
+        data_type: date
+        description: "Block creation timestamp in month specified in block header"
+
+      - name: nonce
+        data_type: string
+        description: "Difficulty solution specified in block header"
+
+      - name: bits
+        data_type: string
+        description: "Difficulty threshold specified in block header"
+
+      - name: coinbase_param
+        data_type: string
+        description: "Data specified in the coinbase transaction of this block"
+
+      - name: transaction_count
+        data_type: int64
+        description: "Number of transactions included in this block"
+
+  - name: stg_outputs
+    description: "Transaction outputs"
+    columns:
+      - name: transaction_hash
+        data_type: string
+        description: "The hash of this transaction"
+
+      - name: index
+        data_type: int64
+        description: "0 indexed number of an output within a transaction used by a later transaction to refer to that specific output"
+
+      - name: script_asm
+        data_type: string
+        description: "Symbolic representation of the bitcoins script language op-codes"
+
+      - name: script_hex
+        data_type: string
+        description: "Hexadecimal representation of the bitcoins script language op-codes"
+
+      - name: required_signatures
+        data_type: int64
+        description: "The number of signatures required to authorize spending of this output"
+
+      - name: type
+        data_type: string
+        description: "The address type of the output"
+
+      - name: addresses
+        data_type: string
+        description: "Address which owns this output"
+
+      - name: value
+        data_type: numeric
+        description: "The value in BTC attached to this output"
+
+  - name: stg_inputs
+    description: ""
+    columns:
+      - name: transaction_hash
+        data_type: string
+        description: "The hash of this transaction"
+
+      - name: index
+        data_type: int64
+        description: "0 indexed number of an input within a transaction"
+
+      - name: spent_transaction_hash
+        data_type: string
+        description: "The hash of the transaction which contains the output that this input spends"
+
+      - name: spent_output_index
+        data_type: int64
+        description: "The index of the output this input spends"
+
+      - name: script_asm
+        data_type: string
+        description: "Symbolic representation of the bitcoins script language op-codes"
+
+      - name: script_hex
+        data_type: string
+        description: "Hexadecimal representation of the bitcoins script language op-codes"
+
+      - name: sequence
+        data_type: int64
+        description: "A number intended to allow unconfirmed time-locked transactions to be updated before being finalized; not currently used except to disable locktime in a transaction"
+
+      - name: required_signatures
+        data_type: int64
+        description: "The number of signatures required to authorize the spent output"
+
+      - name: type
+        data_type: string
+        description: "The address type of the spent output"
+
+      - name: addresses
+        data_type: string
+        description: "Address which owns the spent output"
+
+      - name: value
+        data_type: numeric
+        description: "The value in BTC attached to the spent output"
+
