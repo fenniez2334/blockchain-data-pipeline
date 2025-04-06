@@ -40,7 +40,7 @@ models:
         data_type: date
         description: ""
 
-      - name: num_blocks
+      - name: blocks_count
         data_type: int64
         description: ""
 

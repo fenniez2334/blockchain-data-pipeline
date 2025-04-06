@@ -3,7 +3,7 @@
 WITH blocks_per_day AS (
     SELECT 
         DATE(timestamp) AS date,
-        COUNT(DISTINCT block_hash) AS num_blocks -- Count distinct blocks per day
+        COUNT(DISTINCT block_hash) AS blocks_count -- Count distinct blocks per day
     FROM {{ ref('stg_blocks') }} -- Use the appropriate table that contains block information
     GROUP BY date
 ),
@@ -23,7 +23,7 @@ daily_transactions AS (
 
 SELECT 
     b.date AS block_date,  -- Specify alias for date from blocks_per_day
-    b.num_blocks,
+    b.blocks_count,
     t.transaction_count,
     t.total_transfer_volume,
     t.mean_transfer_volume,
