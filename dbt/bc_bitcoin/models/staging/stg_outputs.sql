@@ -22,6 +22,4 @@ renamed as (
 select * 
 from renamed
 
-{% if var('is_test_run', default=true) %}
-limit 30
-{% endif %}
+
