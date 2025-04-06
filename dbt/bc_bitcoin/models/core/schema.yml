@@ -33,11 +33,15 @@ models:
         data_type: numeric
         description: ""
 
-  - name: transacrion_per_day
-    description: "Number of transactions per day"
+  - name: daily_blocks_transactions
+    description: "Number of blocks and transactions per day"
     columns:
-      - name: date
+      - name: block_date
         data_type: date
+        description: ""
+
+      - name: num_blocks
+        data_type: int64
         description: ""
 
       - name: transaction_count
@@ -75,13 +79,4 @@ models:
         data_type: int64
         description: ""
 
-  - name: blocks_per_day
-    description: "The Number of blocks per day"
-    columns:
-      - name: date
-        data_type: date
-        description: ""
 
-      - name: num_blocks
-        data_type: int64
-        description: ""
