@@ -16,9 +16,29 @@ tasks:
     url: https://github.com/fenniez2334/blockchain-data-pipeline
     branch: main
     namespace: "{{flow.namespace}}"
-    gitDirectory: dbt/bc_bitcoin
+    gitDirectory: dbt
     dryRun: false
     # disabled: true # this Git Sync is needed only when running it the first time, afterwards the task can be disabled
+
+  - id: clean_workspace
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - rm -rf /tmp/kestra-wd/*
+      - mkdir -p /tmp/kestra-wd/dbt
+
+  - id: clone_repo
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - git clone --branch main --depth 1 https://github.com/fenniez2334/blockchain-data-pipeline.git /tmp/kestra-wd/repo
+      - cp -R /tmp/kestra-wd/repo/dbt/bc_bitcoin /tmp/kestra-wd/dbt/
+      - rm -rf /tmp/kestra-wd/repo
+
+  - id: verify_files
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - ls -la /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/
+      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/schema.yml && echo "SUCCESS Schema exists" || echo "ERROR: Schema missing"
+      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/stg_blocks.sql && echo "SUCCESS Model exists" || echo "ERROR: Model missing"
 
   - id: dbt-build
     type: io.kestra.plugin.dbt.cli.DbtCLI
@@ -33,8 +53,10 @@ tasks:
     inputFiles:
       sa.json: "{{kv('GCP_CREDS')}}"
     commands:
+      - dbt clean
       - dbt deps
-      - "{{ inputs.dbt_command }}"
+      - dbt list --select source:staging.blocks
+      # - "{{ inputs.dbt_command }}"
     storeManifest:
       key: manifest.json
       namespace: "{{ flow.namespace }}"
