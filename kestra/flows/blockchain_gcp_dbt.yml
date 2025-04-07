@@ -1,0 +1,78 @@
+id: gcp_dbt
+namespace: blockchain
+inputs:
+  - id: dbt_command
+    type: SELECT
+    allowCustomValue: true
+    defaults: dbt build
+    values:
+      - dbt build
+      - dbt debug # use when running the first time to validate DB connection
+
+
+tasks:
+  - id: sync
+    type: io.kestra.plugin.git.SyncNamespaceFiles
+    url: https://github.com/fenniez2334/blockchain-data-pipeline
+    branch: main
+    namespace: "{{flow.namespace}}"
+    gitDirectory: dbt
+    dryRun: false
+    # disabled: true # this Git Sync is needed only when running it the first time, afterwards the task can be disabled
+
+  - id: clean_workspace
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - rm -rf /tmp/kestra-wd/*
+      - mkdir -p /tmp/kestra-wd/dbt
+
+  - id: clone_repo
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - git clone --branch main --depth 1 https://github.com/fenniez2334/blockchain-data-pipeline.git /tmp/kestra-wd/repo
+      - cp -R /tmp/kestra-wd/repo/dbt/bc_bitcoin /tmp/kestra-wd/dbt/
+      - rm -rf /tmp/kestra-wd/repo
+
+  - id: verify_files
+    type: io.kestra.plugin.scripts.shell.Commands
+    commands:
+      - ls -la /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/
+      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/schema.yml && echo "SUCCESS Schema exists" || echo "ERROR: Schema missing"
+      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/stg_blocks.sql && echo "SUCCESS Model exists" || echo "ERROR: Model missing"
+
+  - id: dbt-build
+    type: io.kestra.plugin.dbt.cli.DbtCLI
+    env:
+      DBT_DATABASE: "{{kv('GCP_PROJECT_ID')}}"
+      DBT_SCHEMA: "{{kv('GCP_DATASET')}}"
+    namespaceFiles:
+      enabled: true
+    containerImage: ghcr.io/kestra-io/dbt-bigquery:latest
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    inputFiles:
+      sa.json: "{{kv('GCP_CREDS')}}"
+    commands:
+      - dbt clean
+      - dbt deps
+      - dbt list --select source:staging.blocks
+      # - "{{ inputs.dbt_command }}"
+    storeManifest:
+      key: manifest.json
+      namespace: "{{ flow.namespace }}"
+    profiles: |
+      default:
+        outputs:
+          dev:
+            type: bigquery
+            dataset: "{{kv('GCP_DATASET')}}"
+            project: "{{kv('GCP_PROJECT_ID')}}"
+            location: "{{kv('GCP_LOCATION')}}"
+            keyfile: sa.json
+            method: service-account
+            priority: interactive
+            threads: 16
+            timeout_seconds: 300
+            fixed_retries: 1
+        target: dev
+

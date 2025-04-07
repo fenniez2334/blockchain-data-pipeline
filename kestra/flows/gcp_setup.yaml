@@ -4,7 +4,7 @@ namespace: blockchain
 tasks:
   - id: create_bq_dataset
     type: io.kestra.plugin.gcp.bigquery.CreateDataset
-    name: "{{kv('GCP_DATASET')}}"
+    name: "{{kv('GCP_DATASET_TEMP')}}"
     location: US  # ensure location is the same as bigquery-public-data.crypto_bitcoin
     ifExists: SKIP
 
