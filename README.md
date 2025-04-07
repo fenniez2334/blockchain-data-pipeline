@@ -18,8 +18,28 @@ To improve usability, this project tackles the challenge of nested arrays by fla
 - Table `inputs` -- Contains individual input records extracted from all transactions
 - Table `outputs` -- Contains individual output records from all transactions
 
+## Technologies / Tools
+- Containerisation : Docker
+- Cloud : GCP
+- Infrastructure as code (IaC) : Terraform
+- Workflow orchestration : Kestra
+- Data Warehouse : BigQuery
+- Batch processing : Spark
+- IDE : VS Code, Jupyter Notebook
+- Language : Python
+- Visualisation : Google Looker Studio
+
 ## Project Architecture Overview
+You can find the detailed Architecture on the diagram below:
 ![blockchain-data-pipeline](images/blockchain-data-pipeline.jpg)
+The end-to-end data pipeline includes the below steps:
+
+- Create a virtual machine and configure the environment as infrastructure-as-code.
+- Partition the Bitcoin dataset and load it into a GCS bucket (data lake).
+- Launch a dataproc clusters (master and worker) to run PySpark jobs for transforming and cleaning the data
+- Processed data is then loaded into Google BigQuery (Data Warehouse).
+- dbt (data build tool) is used to define and build analytics models in BigQuery using SQL-based transformations.
+- Build interactive dashboards by connecting Looker Studio to BigQuery to provide insights into Bitcoin transaction trends and metrics.
 
 ## Step-by-Step Execution Guide
 ### Clone this Git Repository
