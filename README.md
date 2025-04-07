@@ -7,20 +7,19 @@ Google Cloud hosts public datasets containing Bitcoin blockchain transaction rec
 The goal of this project is to create a scalable, cloud-based data pipeline that automates the ingestion, transformation, loading and analysis of Bitcoin blockchain data. By applying Data Engineering concepts—such as cloud platform integration, infrastructure as code, workflow orchestration, batch processing, and analyics—this project enables efficient access to structured blockchain metrics for downstream analytics, dashboards, and research use cases.
 
 ## About the Dataset
-[Bitcoin Cryptocurrency](https://console.cloud.google.com/marketplace/product/bitcoin/crypto-bitcoin) \
+[Bitcoin Cryptocurrency](https://console.cloud.google.com/marketplace/product/bitcoin/crypto-bitcoin) 
 
 The dataset consists of multiple tables hosted in Google Cloud Public Datasets, specifically under the crypto_bitcoin dataset. \
 It includes:
 - Table `blocks` -- Stores each block from Bitcoin Blockchain
-- Table `transactions` -- Stores each transaction per block, including all inputs and outputs as nested arrays. \
+- Table `transactions` -- Stores each transaction per block, including all inputs and outputs as nested arrays. 
 
 To improve usability, this project tackles the challenge of nested arrays by flattening the transaction structure into two additional datasets:
 - Table `inputs` -- Contains individual input records extracted from all transactions
 - Table `outputs` -- Contains individual output records from all transactions
 
-
-
 ## Project Architecture Overview
+![blockchain-data-pipeline](images/blockchain-data-pipeline.jpg)
 
 ## Step-by-Step Execution Guide
 ### Clone this Git Repository
