@@ -2,6 +2,23 @@
 This project builds scalable data pipelines for ingesting, processing, and analyzing Bitcoin blockchain data from Google Cloud Public Datasets.
 
 ## Problem Statement
+This project is part of the requirements for the Data Engineering Zoomcamp 2025 course. The chosen topic focuses on  processing and analyzing Bitcoin blockchain data using modern data engineering practices.\
+Google Cloud hosts public datasets containing Bitcoin blockchain transaction records, including detailed data on blocks, transactions, inputs, and outputs. These datasets are continuously growing and stored in raw form, making them challenging to analyze efficiently without a proper data engineering pipeline.\
+The goal of this project is to create a scalable, cloud-based data pipeline that automates the ingestion, transformation, loading and analysis of Bitcoin blockchain data. By applying Data Engineering concepts—such as cloud platform integration, infrastructure as code, workflow orchestration, batch processing, and analyics—this project enables efficient access to structured blockchain metrics for downstream analytics, dashboards, and research use cases.
+
+## About the Dataset
+[Bitcoin Cryptocurrency](https://console.cloud.google.com/marketplace/product/bitcoin/crypto-bitcoin) \
+
+The dataset consists of multiple tables hosted in Google Cloud Public Datasets, specifically under the crypto_bitcoin dataset. \
+It includes:
+- Table `blocks` -- Stores each block from Bitcoin Blockchain
+- Table `transactions` -- Stores each transaction per block, including all inputs and outputs as nested arrays. \
+
+To improve usability, this project tackles the challenge of nested arrays by flattening the transaction structure into two additional datasets:
+- Table `inputs` -- Contains individual input records extracted from all transactions
+- Table `outputs` -- Contains individual output records from all transactions
+
+
 
 ## Project Architecture Overview
 
