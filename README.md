@@ -30,8 +30,8 @@ To improve usability, this project tackles the challenge of nested arrays by fla
 - Visualisation : Google Looker Studio
 
 ## Project Architecture Overview
-You can find the detailed Architecture on the diagram below:
-![blockchain-data-pipeline](images/blockchain-data-pipeline.jpg)
+You can find the detailed Architecture on the diagram below: \
+![blockchain-data-pipeline](images/blockchain-data-pipeline.jpg) \
 The end-to-end data pipeline includes the below steps:
 
 - Create a virtual machine and configure the environment as infrastructure-as-code.
