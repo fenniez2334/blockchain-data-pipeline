@@ -16,35 +16,17 @@ tasks:
     url: https://github.com/fenniez2334/blockchain-data-pipeline
     branch: main
     namespace: "{{flow.namespace}}"
-    gitDirectory: dbt
+    gitDirectory: dbt/bc_bitcoin
     dryRun: false
     # disabled: true # this Git Sync is needed only when running it the first time, afterwards the task can be disabled
-
-  - id: clean_workspace
-    type: io.kestra.plugin.scripts.shell.Commands
-    commands:
-      - rm -rf /tmp/kestra-wd/*
-      - mkdir -p /tmp/kestra-wd/dbt
-
-  - id: clone_repo
-    type: io.kestra.plugin.scripts.shell.Commands
-    commands:
-      - git clone --branch main --depth 1 https://github.com/fenniez2334/blockchain-data-pipeline.git /tmp/kestra-wd/repo
-      - cp -R /tmp/kestra-wd/repo/dbt/bc_bitcoin /tmp/kestra-wd/dbt/
-      - rm -rf /tmp/kestra-wd/repo
-
-  - id: verify_files
-    type: io.kestra.plugin.scripts.shell.Commands
-    commands:
-      - ls -la /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/
-      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/schema.yml && echo "SUCCESS Schema exists" || echo "ERROR: Schema missing"
-      - test -f /tmp/kestra-wd/dbt/bc_bitcoin/models/staging/stg_blocks.sql && echo "SUCCESS Model exists" || echo "ERROR: Model missing"
 
   - id: dbt-build
     type: io.kestra.plugin.dbt.cli.DbtCLI
     env:
       DBT_DATABASE: "{{kv('GCP_PROJECT_ID')}}"
       DBT_SCHEMA: "{{kv('GCP_DATASET')}}"
+      DBT_PROFILES_DIR: ".."  # Critical change
+      GOOGLE_APPLICATION_CREDENTIALS: "./sa.json"
     namespaceFiles:
       enabled: true
     containerImage: ghcr.io/kestra-io/dbt-bigquery:latest
@@ -52,14 +34,6 @@ tasks:
       type: io.kestra.plugin.scripts.runner.docker.Docker
     inputFiles:
       sa.json: "{{kv('GCP_CREDS')}}"
-    commands:
-      - dbt clean
-      - dbt deps
-      - dbt list --select source:staging.blocks
-      # - "{{ inputs.dbt_command }}"
-    storeManifest:
-      key: manifest.json
-      namespace: "{{ flow.namespace }}"
     profiles: |
       default:
         outputs:
@@ -75,4 +49,14 @@ tasks:
             timeout_seconds: 300
             fixed_retries: 1
         target: dev
+    commands: 
+      
+      - echo "=== RUNNING DBT ==="
+      - dbt deps
+      - dbt run --select source:staging.blocks --profiles-dir .. --full-refresh
+      - dbt list --select source:staging.blocks --profiles-dir ..
+      # - "{{ inputs.dbt_command }}"
+    storeManifest:
+      key: manifest.json
+      namespace: "{{ flow.namespace }}"
 
