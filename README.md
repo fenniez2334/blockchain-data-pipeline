@@ -1,4 +1,4 @@
-# blockchain-data-pipeline
+# Bitcoin Blockchain Data Pipeline Project
 This project builds scalable data pipelines for ingesting, processing, and analyzing Bitcoin blockchain data from Google Cloud Public Datasets.
 
 ## Problem Statement
@@ -43,34 +43,39 @@ The end-to-end data pipeline includes the below steps:
 - dbt (data build tool) is used to define and build analytics models in BigQuery using SQL-based transformations.
 - Build interactive dashboards by connecting Looker Studio to BigQuery to provide insights into Bitcoin transaction trends and metrics.
 
-## Step-by-Step Execution Guide
+## Reproduce the Project
 ### Clone this Git Repository
 To ensure smooth reproducibility of this project, I recommend following the steps below:
-1. Step 1: Use a Linux-Compatible Environment
+1. Use a Linux-Compatible Environment
 * Run the following steps in a GitBash or MinGW terminal to ensure that the process runs in a Linux-like environment.
-* If you are using a Windows system, download and install Git Bash from https://git-scm.com/downloads
-2. Step 2: Clone the Repository
+* If you are using a Windows system, download and install [Git Bash](https://git-scm.com/downloads)
+2. Clone the Repository
 * Open a git bash terminal and navigate to your home directory `cd ~` 
 * clone this github repository under your home directory 
-```
+```bash
 git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
 ```
-3. Step 3: Navigate to project directory
-```
+3. Navigate to project directory
+```bash
 cd blockchain-data-pipeline
 ```
 
 ### Setup GCP
-* Create GCP Account, go to: https://console.cloud.google.com/
-* Setup New Project and write down your Project ID.
+Follow these steps to configure your Google Cloud Platform environment.
+1. Create a GCP Account
+ Visit [Google Cloud Console](https://console.cloud.google.com/) and sign in or create a new account 
+2. Set Up a New Project
+* Create a new project and take note of your Project ID.
 ```
 Project name: blockchain-data-pipeline
 Project number: 711665363740
 Project ID: blockchain-data-pipeline
 ```
-* Configure Service Account to get access to the project. Use the link: https://console.cloud.google.com/iam-admin/serviceaccounts
+3. Configure a Service Account
+* Go to the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts)
 * Create service account with the name: `blockchain-pipeline-sa`
-* Please provide the service account the permissions below (sorted by name):
+4. Assign Roles to the Service Account
+Please provide the service account the permissions below (sorted by name):
 ```
 1. BigQuery Admin
 2. BigQuery Data Editor
@@ -84,64 +89,76 @@ Project ID: blockchain-data-pipeline
 10. Storage Admin
 11. Storage Object Admin
 ```
-* Enable these APIs for your project:
-- https://console.cloud.google.com/apis/library/iam.googleapis.com
-- https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com
+5. Enable Required APIs
+* Enable the following APIs for your project:
+- [IAM API](https://console.cloud.google.com/apis/library/iam.googleapis.com)
+- [IAM Credentials API](https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com)
 
 ### Set Up Google Cloud Service Account Credentials
-1. Step 1: Access Google Cloud Console
-* Go to https://console.cloud.google.com/iam-admin/serviceaccounts
+1. Access Google Cloud Console
+* Navigate to the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts)
 * Locate and select your service account `blockchain-pipeline-sa` 
-2. Step 2: Generate a New Key
-* Under the `keys` section: click on `add key` --> select `create new key` --> choose `JSON` as key type --> click `create`
-3. Step 3: Download and Rename the Key
-* Download the Service Account credential file, rename it to `gcp-creds.json`
-4. Step 4: Move the Key to the Project Directory
+2. Generate a New Key
+* Under the `keys` section: click on `add key` --> select `create new key`
+* Choose `JSON` as key type and click `create`
+3. Download and Rename the Key
+* Download the Service Account credential file
+* Rename it to `gcp-creds.json`
+4. Move the Key to the Project Directory
 * Place the renamed key file in the following directory within your project: 
 ```
 blockchain-data-pipeline/keys/gcp-creds.json
 ```
-5. Step 5: Set environment variable to point to your downloaded GCP keys:
-```
-export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.json"
+5. Set Environment Variable 
+* Point your environment to the service account key by setting the following environment variable:
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="blockchain-data-pipeline/keys/gcp-creds.json"
 ```
 
 
 ### Terraform as Infrastructure-as-Code(IaC) Tool
-* Download and install Terraform by this link: https://www.terraform.io/downloads
-* Put it to a folder in `PATH`, check this instruction: https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7
-* navigate to your home directory `cd ~` 
-* located to `terraform` folder using `cd blockchain-data-pipeline` and `cd terraform`
-* `main.td` will automatically generate the following resouces:
+This project uses `Terraform` to automate the creation and configuration of Google Cloud resources.
+1. Install Terraform
+* Download and install [Terraform](https://www.terraform.io/downloads)
+* Add Terraform to your system `PATH`: follow this guide --> [Add Terraform to PATH](https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7)
+2. Navigate to the Terraform Directory
+* Navigate to your home directory `cd ~` 
+* located to `terraform` folder using `cd blockchain-data-pipeline/terraform`
+3. Resources Created by `main.tf`
+* The `main.tf` will automatically generate the following resouces:
 ```
 1. Google Provider Versions
 2. resource "google_storage_bucket"
 3. resource "google_bigquery_dataset"
-4. resource "google_compute_address"
-5. resource "google_compute_network"
-6. resource "google_compute_instance"
-7. resource "google_compute_firewall"
-8. output "vm_external_ip"
+4. resource "google_compute_address" (Static External IP)
+5. resource "google_compute_network" (VPC Network)
+6. resource "google_compute_instance" (VM)
+7. resource "google_compute_firewall" (SSH/Ingress Rules)
+8. output "vm_external_ip" (External IP for the VM)
 ```
+4. Run Terraform Commands
 * execute the following steps:
-1. `terraform init`: Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control
-2. `terraform plan`: Matches/previews local changes against a remote state, and proposes an Execution Plan.
-3. To automatically update VM instance external IP in the config file. I created `update_ssh_config.sh` to handle this task.
-* To make the script executable, run the following bash command:
-```
+- `terraform init`: Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control
+- `terraform plan`: Matches/previews local changes against a remote state, and proposes an Execution Plan.
+- Before running, make the IP update script executable:
+```bash
 chmod +x update_ssh_config.sh
 ```
-* Then, we can automate this by chaining it with `terraform apply`:
+* Then execute:
 ```bash
 terraform apply -auto-approve && ./update_ssh_config.sh
 ```
-* Once you successfully reproduce this project and you would like to remove your stack from the Cloud, use the `terraform destroy` command.
+This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access.
+5. Destroy Infrastructure (Optional)
+* Once you successfully reproduce this project and you would like to remove your resources from the Cloud, use the `terraform destroy` command.
+**Warning: This will remove all GCP resources defined in your Terraform configuration.**
 
 
 ### Setup SSH access into VM
-* Use Git Bash to open terminal on your local laptop in Linux environment
-* first navigate to the ssh directory
-```
+1. Open Terminal in a Linux Exvironment
+* Use Git Bash or your preferred terminal
+2. Navigate to the `.ssh` directory
+```bash
 cd .ssh/
 ```
 * create a new ssh key
