@@ -347,17 +347,20 @@ gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-cen
 1. Create a [dbt CLoud account](https://www.getdbt.com/).
 2. Create a new project.
     * Give it a name (`blockchain-data-pipeline` is recommended)
-    * Input `dbt/bc_bitcoin` as the _Project subdirectory_.
+    * Input `dbt/bc_bitcoin` as the _Project subdirectory_. \
+![dbt_project](images/dbt_project.jpg)     
+
     * Choose _BigQuery_ as a database connection.
     * Use the following settings:
         - You may leave the default connection name.
         - Upload your Service Account JSON file --> choose the `gcp-creds.json` we created previously.
-        - Under _Development credentials_, choose `bc_bitcoin` for the dataset.
-        - Test the connection and click on _Save_ once the connection is tested successfully.
+    * Under _Development credentials_, choose `bc_bitcoin` for the dataset.
+![dbt_credentials](images/dbt_credentials.jpg)  
 
 3. Connect to GitHub
     * In the _Add repository from_ form, click on Github 
     * Select your fork or enter a Git repo URL directly
+![dbt_git_repo](images/dbt_git_repo.jpg) 
 4. Open the dbt Cloud IDE
     * Use the ☰ (hamburger menu) --> **Develop** to launch the IDE
 
@@ -368,11 +371,21 @@ gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-cen
         - `daily_blocks_transactions`, `daily_miner_metrics`, `address_type`: final models for dashboards
 
 
-### Google lookerstudio
-[lookerstudio](https://lookerstudio.google.com/)
-
 ### Dashboard
-https://lookerstudio.google.com/s/s4UwpKU3qC0
+- **Data Source**: BigQuery  
+- **Visualization Tool**: Google Looker Studio
+* [View the Live Dashboard](https://lookerstudio.google.com/reporting/86e5053a-bc92-4b8e-b35e-b08c937c024f) 
+* This interactive dashboard provides insights into the Bitcoin blockchain dataset. You can:
+    - Explore key blockchain metrics like block counts, transaction volume, miner activity, and address types
+    - Select a custom **date range** to filter and view data over specific time periods
+
+* Below are screenshots in case you can't open the dashboard link:
+
+
+## TODO
+* Add CI/CD pipeline
+* Add tests
+* Add automation
 
 ## Contact
 If you have any questions or suggestions, feel free to connect with me on [Linkedin](https://www.linkedin.com/in/feifei-z-0494bba0/) or DataTalks Slack (Feifei Zhao).
