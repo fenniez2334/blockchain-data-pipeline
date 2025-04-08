@@ -380,6 +380,8 @@ gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-cen
     - Select a custom **date range** to filter and view data over specific time periods
 
 * Below are screenshots in case you can't open the dashboard link:
+![dashboard1](images/dashboard1.jpg) 
+![dashboard2](images/dashboard2.jpg) 
 
 
 ## TODO
