@@ -101,9 +101,9 @@ Please provide the service account the permissions below (sorted by name):
 ![service_account_credential_file1](images/service_account_credential_file1.jpg)
 
 2. Generate a New Key
-* Under the `keys` section: click on `add key` --> select `create new key`
+* Under the `keys` section: click on `add key` --> select `create new key` \
 ![service_account_credential_file2](images/service_account_credential_file2.jpg)
-* Choose `JSON` as key type and click `create`
+* Choose `JSON` as key type and click `create` \
 ![service_account_credential_file3](images/service_account_credential_file3.jpg)
 3. Download and Rename the Key
 * Download the Service Account credential file
