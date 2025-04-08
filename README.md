@@ -246,16 +246,24 @@ bash startup_vm.sh || echo 'Startup script failed'
 This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
 🛠️ **Note: If the script fails, check the terminal output for errors and manually troubleshoot missing packages.**
 
-### Run Workflows in Kestra to Ingest data to GCS
-1. Navigate to kestra directory and run docker-compose to start the kestra
+### Run Workflows in Kestra to Ingest Data to GCS
+1. Start Kestra with Docker Compose
+Open a terminal in your VM and navigate to the Kestra directory:
 ```
 cd ~/blockchain-data-pipeline/kestra
 docker-compose up -d
 ```
-2. add forward port `8080` in VS Code, use a broswer to open the kestra url: http://localhost:8080/
-3. setup Key Value in kestra
-go to `KV Store`, add `GCP_CREDS` for namespace `blockchain`, copy and paste your service account credential file as the value.
-![kestraKVsettings](images/kestra KV settings.jpg) 
+2. Expose Port for Web Access
+* In VS Code, forward port 8080 to access the Kestra web UI.
+* Open your browser and go to: http://localhost:8080/
+3. Configure Key-Value Store in Kestra
+* In the Kestra UI, navigate to `KV Store`.
+* Add a new key:
+    - Namespace: `blockchain`
+    - Key: `GCP_CREDS`
+    - Value: Paste the full content of your GCP service account credential JSON.
+
+![kestra_KV_settings](images/kestra_KV_settings.jpg) 
 
 
 
