@@ -148,7 +148,7 @@ chmod +x update_ssh_config.sh
 ```bash
 terraform apply -auto-approve && ./update_ssh_config.sh
 ```
-This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access.
+This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. \
 5. Destroy Infrastructure (Optional)
 * Once you successfully reproduce this project and you would like to remove your resources from the Cloud, use the `terraform destroy` command.
 **Warning: This will remove all GCP resources defined in your Terraform configuration.**
@@ -159,43 +159,73 @@ This will automatically create the infrastructure and update the VM's external I
 * Use Git Bash or your preferred terminal
 2. Navigate to the `.ssh` directory
 ```bash
-cd .ssh/
+cd ~/.ssh/
 ```
-* create a new ssh key
-```
+3. Generate a New SSH Key Pair
+```bash
 ssh-keygen -t rsa -f gcp -C fenniez -b 2048
 ```
-* This command will generate one public key `gcp.pub` and one private key `gcp`
-* put this public key `gcp.pub` to google cloud, go to Compute Engine --> Meta data --> ssh keys
-* Use the command in the bash terminal to print the public key
-```
+This command will generate:
+- one public key `gcp.pub` 
+- one private key `gcp`
+4. Add Your Public Key to Google Cloud
+- Display the contents of your public key:
+```bash
 cat gcp.pub
 ```
-* username: fenniez
-* key is our generated public key + username at the end
-* copy this key and paste it in `google cloud ssh keys` and click `save` botton.
+- Copy the entire output
+- Go to Google Cloud Console --> Compute Engine --> Metadata --> SSH Keys
+- Click Edit and then Add SSH Key.
+- Paste your copied public key. Make sure it ends with your username:
+```
+ssh-rsa AAAA... your-key-content ... fenniez
+```
+- username: fenniez
+- key is our generated public key + username at the end
+- click `save` to apply the changes
 
-### Creating SSH config file
-* In previous steps, the `update_ssh_config.sh` create config file which includes the following settings:
+### Creating SSH Config File
+* As part of the previous steps, the `update_ssh_config.sh` script automatically generates an SSH configuration file with the following content:
 ```
 Host blockchain-dev
-    HostName XX.XX.XX.XXX
+    HostName XX.XX.XX.XXX    # Replace with your VM's external IP
     User fenniez
     IdentityFile ~/.ssh/gcp
 ```
-* Later, use `ssh blockchain-dev` or `ssh -i ~/.ssh/gcp fenniez@externalIP ` to ssh into the google VM.
+**Tip: You can also edit the config file manually at ~/.ssh/config if needed.**
+* You can now connect to the VM using either of the following methods:
+- Shortcut (from config file)
+```bash
+ssh blockchain-dev
+```
+- Manual
+```bash
+ssh -i ~/.ssh/gcp fenniez@externalIP
+```
 * Enable ssh with VS Code by installing Remote-SSH plugin and connecting to the remote host using the above configuration file. 
 
-### Accessing the remote machine with VS Code and SSH remote
-1. install `Remote - SSH` extensions in VS Code
-2. click the `Open a Remote Window` at the left bottom of VS code
-3. select `Connect to Host...`, then pick our VM instance name
+### Accessing the Remote Machine with VS Code and SSH Remote
+1. Install `Remote - SSH` extensions in VS Code
+2. Click the `Open a Remote Window` or `><` green icon in the bottom-left corner of VS Code
+3. Select `Connect to Host...`, then pick our VM instance name
 
-### Using sftp for putting the credentials to the remote machine
-1. go to the local folder stores the gcp credentials `blockchain-data-pipeline/keys/gcp-creds.json`
-2. use `sftp blockchain-dev` connect to VM blockchain-dev
-3. `mkdir key` create key folder in VM
-4. `put gcp-creds.json key/gcp-creds.json` -- upload gcp-creds.json to VM key/gcp-creds.json
+### Using SFTP to Upload GCP Credentials to the Remote VM
+1. Navigate to the Credentials Folder Locally
+```bash
+cd blockchain-data-pipeline/keys
+```
+2. Connect to the VM via SFTP
+```bash
+sftp blockchain-dev
+```
+3. Create a Directory on the VM for Credentials
+```sftp
+mkdir key
+```
+4. Upload the Credentials File to the Remote Machine
+```sftp
+put gcp-creds.json key/gcp-creds.json
+```
 
 ### setup google application credentials:
 Create an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` and assign it to the path of your json credentials file, which should be `$HOME/key/gcp-creds.json`. Assuming you're running bash:
