@@ -345,20 +345,27 @@ gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-cen
 
 ### Setting up dbt Cloud
 1. Create a [dbt CLoud account](https://www.getdbt.com/).
-1. Create a new project.
-    1. Give it a name (`blockchain-data-pipeline` is recommended), and input `dbt/bc_bitcoin` as the _Project subdirectory_.
-    1. Choose _BigQuery_ as a database connection.
-    1. Choose the following settings:
-        * You may leave the default connection name.
-        * Upload a Service Account JSON file > choose the `gcp-creds.json` we created previously.
-        * Under _Development credentials_, choose `bc_bitcoin` for the dataset. This name will be added as a prefix to the schemas. 
-        * Test the connection and click on _Continue_ once the connection is tested successfully.
-    1. In the _Add repository from_ form, click on Github and choose your fork from your user account. Alternatively, you may provide a URL and clone the repo.
-1. Once the project has been created, you should now be able to click on the hamburger menu on the top left and click on _Develop_ to load the dbt Cloud IDE.
+2. Create a new project.
+    * Give it a name (`blockchain-data-pipeline` is recommended)
+    * Input `dbt/bc_bitcoin` as the _Project subdirectory_.
+    * Choose _BigQuery_ as a database connection.
+    * Use the following settings:
+        - You may leave the default connection name.
+        - Upload your Service Account JSON file --> choose the `gcp-creds.json` we created previously.
+        - Under _Development credentials_, choose `bc_bitcoin` for the dataset.
+        - Test the connection and click on _Save_ once the connection is tested successfully.
 
-You may now run the `dbt build` command in the bottom prompt to run all models; this will generate 3 different datasets in BigQuery:
-* `stg_XXXXX` hosts the staging views for generating the final end-user tables.
-* `daily_blocks_transactions`, `daily_miner_metrics`, `address_type` hosts the core tables for generating the final dashboards.
+3. Connect to GitHub
+    * In the _Add repository from_ form, click on Github 
+    * Select your fork or enter a Git repo URL directly
+4. Open the dbt Cloud IDE
+    * Use the ☰ (hamburger menu) --> **Develop** to launch the IDE
+
+5. Run your dbt models
+    * In the bottom prompt, run the `dbt build` command to run all models
+    * This will generate the following datasets in BigQuery:
+        - `stg_XXXXX` hosts the staging views for generating the final end-user tables.
+        - `daily_blocks_transactions`, `daily_miner_metrics`, `address_type`: final models for dashboards
 
 
 ### Google lookerstudio
