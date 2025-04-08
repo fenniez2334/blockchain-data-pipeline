@@ -98,9 +98,13 @@ Please provide the service account the permissions below (sorted by name):
 1. Access Google Cloud Console
 * Navigate to the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts)
 * Locate and select your service account `blockchain-pipeline-sa` 
+![service_account_credential_file1](images/service_account_credential_file1.jpg)
+
 2. Generate a New Key
 * Under the `keys` section: click on `add key` --> select `create new key`
+![service_account_credential_file2](images/service_account_credential_file2.jpg)
 * Choose `JSON` as key type and click `create`
+![service_account_credential_file3](images/service_account_credential_file3.jpg)
 3. Download and Rename the Key
 * Download the Service Account credential file
 * Rename it to `gcp-creds.json`
@@ -265,6 +269,21 @@ docker-compose up -d
 
 ![kestra_KV_settings](images/kestra_KV_settings.jpg) 
 
+4. Execute Flows
+* Execute `gcp_kv.yaml` 
+This flow sets up all the required Google Cloud Platform Key-Value pairs (such as projectID and location) in Kestra's KV Store.
+* Execute `gcp_setup.yaml` 
+This flow provisions the necessary resources in BigQuery, such as datasets and tables.
+* Execute `gcp_bucket_scheduled.yaml` in backfill mode
+This flow is responsible for ingesting partitioned data from Google Cloud Storage into BigQuery. 
+    - Navigate to `Triggers` tab of the flow 
+    - Click the `Backfill executions` button
+    - Provide values for the backfill (e.g., `start` and `end` times, `data_type`, `backfill=true`).
+    - Use the same values shown in the reference image for both blocks data and transactions data.
+![kestra_backfill-1](images/kestra_backfill-1.jpg) 
+![kestra_backfill-2](images/kestra_backfill-2.jpg) 
+
+* Once all flows execute successfully, Bitcoin blockchain data will be available in your GCS bucket
 
 
 ### Setup Dataproc Cluster in GCP
