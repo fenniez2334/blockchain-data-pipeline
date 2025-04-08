@@ -250,7 +250,7 @@ bash startup_vm.sh || echo 'Startup script failed'
 This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
 🛠️ **Note: If the script fails, check the terminal output for errors and manually troubleshoot missing packages.**
 
-### Run Workflows in Kestra to Ingest Data to GCS
+### Kestra and Orchestration
 1. Start Kestra with Docker Compose
 Open a terminal in your VM and navigate to the Kestra directory:
 ```
@@ -286,9 +286,12 @@ This flow is responsible for ingesting partitioned data from Google Cloud Storag
 * Once all flows execute successfully, Bitcoin blockchain data will be available in your GCS bucket
 
 
-### Setup Dataproc Cluster in GCP
-1. use the following command to create dataproc cluster
-```
+### Batch Processing
+In this step, we use Google Cloud Dataproc to launch a Spark cluster that runs PySpark jobs for transforming and cleaning the raw blockchain data. The processed data is then written to Google BigQuery.
+1. Launch a Dataproc Cluster
+* Located to `batch` directory, using `cd blockchain-data-pipeline/batch`
+* Use the following command to create a Dataproc cluster with one master and two worker nodes:
+```bash
 gcloud dataproc clusters create blockchain-data-pipeline-cluster \
     --region=us-central1 \
     --image-version=2.2-ubuntu22 \
@@ -302,19 +305,22 @@ gcloud dataproc clusters create blockchain-data-pipeline-cluster \
     --scopes=https://www.googleapis.com/auth/cloud-platform \
     --optional-components=JUPYTER,DOCKER \
     --enable-component-gateway
-
 ```
-Wait for a few minutes. Once the cluster the successfully created, check the cluster using:
-```
+Wait for a few minutes until the cluster is fully provisioned. Then check the cluster status:
+```bash
 gcloud dataproc clusters describe blockchain-data-pipeline-cluster --region=us-central1
 ```
-2. Upload the script to GCS:
+2. Prepare the Spark Job
+* The job will process two input datasets: `blocks.parquet` and `transactions.parquet`.
+* We test this framework locally using the notebook: [Link to spark_gcs_local.ipynb](batch/spark_gcs_local.ipynb).
+3. Upload PySpark Script to GCS
+Upload your Spark job script to your GCS bucket:
 ```
 gsutil cp spark_to_bigquery.py gs://blockchain-data-pipeline-bucket/code/spark_to_bigquery.py
 ```
-3. Upload and Run `spark_to_bigquery.py`
-To submit your PySpark job to Google Dataproc, use the following command:
-```
+4. Submit the Spark Job to Dataproc
+Submit your PySpark job using the following command:
+```bash
 gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/spark_to_bigquery.py \
     --cluster=blockchain-data-pipeline-cluster \
     --region=us-central1 \
@@ -329,17 +335,31 @@ gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/sp
     --out_outputs=blockchain-data-pipeline.bc_bitcoin.outputs
 
 ```
-**Note:** This Spark job will take more than 10 minutes to process, depending on the size of the dataset, so please be patient as it runs.
-**Note:** Replace the bucket name with your own bucket name generated with the dataproc cluster, it usually named as `dataproc-temp-us-central1-XXXXXXXX-XXXXXXXXX`
-4. Once the four datasets are successfully loaded into BigQuery, you can delete the Dataproc clusters to avoid unnecessary charges. Use the following command:
+**Note:** This Spark job will take over 10 minutes to process, depending on the size of the dataset, so please be patient as it runs. \
+**Note:** Replace `--bucket=` with your own temporary bucket name generated with Dataproc (usually formatted like `dataproc-temp-us-central1-XXXXXXXX-XXXXXXXXX`) \
+4. Clean Up (Optional but Recommended)
+After the job finishes and your data is successfully written to BigQuery, delete the Dataproc cluster to avoid incurring extra charges:
 ```
 gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-central1
 ```
 
+### Setting up dbt Cloud
+1. Create a [dbt CLoud account](https://www.getdbt.com/).
+1. Create a new project.
+    1. Give it a name (`blockchain-data-pipeline` is recommended), and input `dbt/bc_bitcoin` as the _Project subdirectory_.
+    1. Choose _BigQuery_ as a database connection.
+    1. Choose the following settings:
+        * You may leave the default connection name.
+        * Upload a Service Account JSON file > choose the `gcp-creds.json` we created previously.
+        * Under _Development credentials_, choose `bc_bitcoin` for the dataset. This name will be added as a prefix to the schemas. 
+        * Test the connection and click on _Continue_ once the connection is tested successfully.
+    1. In the _Add repository from_ form, click on Github and choose your fork from your user account. Alternatively, you may provide a URL and clone the repo.
+1. Once the project has been created, you should now be able to click on the hamburger menu on the top left and click on _Develop_ to load the dbt Cloud IDE.
 
-### DBT
-To run full data `dbt run --vars '{"is_test_run": false}'`
-generate documentation `dbt docs generate`
+You may now run the `dbt build` command in the bottom prompt to run all models; this will generate 3 different datasets in BigQuery:
+* `stg_XXXXX` hosts the staging views for generating the final end-user tables.
+* `daily_blocks_transactions`, `daily_miner_metrics`, `address_type` hosts the core tables for generating the final dashboards.
+
 
 ### Google lookerstudio
 [lookerstudio](https://lookerstudio.google.com/)
