@@ -1,6 +1,31 @@
 # Bitcoin Blockchain Data Pipeline Project
 This project builds scalable data pipelines for ingesting, processing, and analyzing Bitcoin blockchain data from Google Cloud Public Datasets.
 
+## Index
+
+- [Bitcoin Blockchain Data Pipeline Project](#bitcoin-blockchain-data-pipeline-project)
+  - [Problem Statement](#problem-statement)
+  - [About the Dataset](#about-the-dataset)
+  - [Technologies / Tools](#technologies--tools)
+  - [Project Architecture Overview](#project-architecture-overview)
+  - [Reproduce the Project](#reproduce-the-project)
+    - [Clone this Git Repository](#clone-this-git-repository)
+    - [Setup GCP](#setup-gcp)
+    - [Set Up Google Cloud Service Account Credentials](#set-up-google-cloud-service-account-credentials)
+    - [Terraform as Infrastructure-as-Code(IaC) Tool](#terraform-as-infrastructure-as-codeiac-tool)
+    - [Setup SSH access into VM](#setup-ssh-access-into-vm)
+    - [Creating SSH Config File](#creating-ssh-config-file)
+    - [Accessing the Remote Machine with VS Code and SSH Remote](#accessing-the-remote-machine-with-vs-code-and-ssh-remote)
+    - [Using SFTP to Upload GCP Credentials to the Remote VM](#using-sftp-to-upload-gcp-credentials-to-the-remote-vm)
+    - [Set Up Google Application Credentials](#set-up-google-application-credentials)
+    - [Setup environment on VM](#setup-environment-on-vm)
+    - [Kestra and Orchestration](#kestra-and-orchestration)
+    - [Batch Processing](#batch-processing)
+    - [Setting up dbt Cloud](#setting-up-dbt-cloud)
+    - [Dashboard](#dashboard)
+  - [TODO](#todo)
+  - [Contact](#contact)
+
 ## Problem Statement
 This project is part of the requirements for the Data Engineering Zoomcamp 2025 course. The chosen topic focuses on  processing and analyzing Bitcoin blockchain data using modern data engineering practices.\
 Google Cloud hosts public datasets containing Bitcoin blockchain transaction records, including detailed data on blocks, transactions, inputs, and outputs. These datasets are continuously growing and stored in raw form, making them challenging to analyze efficiently without a proper data engineering pipeline.\
