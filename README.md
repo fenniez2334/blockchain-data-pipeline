@@ -226,63 +226,38 @@ mkdir key
 ```sftp
 put gcp-creds.json key/gcp-creds.json
 ```
-
-### setup google application credentials:
-Create an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` and assign it to the path of your json credentials file, which should be `$HOME/key/gcp-creds.json`. Assuming you're running bash:
-1. Open `.bashrc` using `nano ~/.bashrc`
-2. At the end of the file, add the following line:
-```
-export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp-creds.json
-```
-3. Exit nano with `Ctrl + X`. Run `source ~/.bashrc`to activate the environment variable.
-4. You can also use `echo` to do the same setup:
-```
+5. Set Up Google Application Credentials
+To enable your VM to access Google Cloud services, you need to set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable. \
+In your VM terminal, run the following commands (assuming you're using bash) to add the variable to your shell configuration:
+```bash
 echo 'export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp-creds.json' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### Install Spark
-1. Install Java
-create and navigate to the spark folder: `mkdir -p ~/spark && cd ~/spark` 
-download and extract OpenJDK 11:
-```
-wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
-tar xzfv openjdk-11.0.2_linux-x64_bin.tar.gz
-```
-set up `JAVA_HOME` and update `.bashrc`:
-```
-echo 'export JAVA_HOME="$HOME/spark/jdk-11.0.2"' >> ~/.bashrc
-echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-remove the archive using `rm openjdk-11.0.2_linux-x64_bin.tar.gz`.
-2. Install Spark
-Download and unpack Spark using the following scripts
-```
-cd ~/spark
-wget https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
-tar xzfv spark-3.3.2-bin-hadoop3.tgz
-```
-next, add the spark to `PATH`:
-```
-echo 'export SPARK_HOME="$HOME/spark/spark-3.3.2-bin-hadoop3"' >> ~/.bashrc
-echo 'export PATH="$SPARK_HOME/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-remove the archive using `rm spark-3.3.2-bin-hadoop3.tgz`.
+### Setup environment on VM
+Once the VM is up and running, it will already have the Git repository cloned. \
+To install all the necessary dependencies and tools, run the following commands in the terminal:
 
-3. Setup PySpark
-Add PySpark to `PYTHONPATH`:
+```bash
+cd ~/blockchain-data-pipeline/terraform
+chmod +x startup_vm.sh
+bash startup_vm.sh || echo 'Startup script failed'
 ```
-echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
-echo 'export PYTHONPATH="$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"' >> ~/.bashrc
-source ~/.bashrc
+This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
+🛠️ **Note: If the script fails, check the terminal output for errors and manually troubleshoot missing packages.**
+
+### Run Workflows in Kestra to Ingest data to GCS
+1. Navigate to kestra directory and run docker-compose to start the kestra
 ```
-### Connect to Google Cloud Storage
-Download the jar for connecting to GCS to any location (e.g. the lib folder):
+cd ~/blockchain-data-pipeline/kestra
+docker-compose up -d
 ```
-gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar gcs-connector-hadoop3-2.2.5.jar 
-```
+2. add forward port `8080` in VS Code, use a broswer to open the kestra url: http://localhost:8080/
+3. setup Key Value in kestra
+go to `KV Store`, add `GCP_CREDS` for namespace `blockchain`, copy and paste your service account credential file as the value.
+![kestraKVsettings](images/kestra KV settings.jpg) 
+
+
 
 ### Setup Dataproc Cluster in GCP
 1. use the following command to create dataproc cluster
