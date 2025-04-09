@@ -279,6 +279,11 @@ This script installs required software such as Python, Spark, pip packages, and 
 
 🛠️ **Note: If the script fails, check the terminal output for any error messages and manually troubleshoot missing packages.**
 
+Once everything is successfully installed, run the following command to reload bashrc and apply any changes:
+```bash
+source ~/.bashrc
+```
+
 
 ### Kestra and Orchestration
 1. Start Kestra with Docker Compose
