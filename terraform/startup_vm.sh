@@ -3,7 +3,8 @@
 echo "-------------------------START SETUP---------------------------"
 
 echo "Updating system..."
-sudo apt update && sudo apt -y upgrade
+sudo apt-get update
+# sudo apt update && sudo apt -y upgrade
 
 echo "Installing dependencies..."
 sudo apt-get install -y wget curl git apt-transport-https ca-certificates gnupg software-properties-common unzip
@@ -22,7 +23,6 @@ rm Anaconda3-2021.11-Linux-x86_64.sh
 sleep 20
 
 echo "Installing Docker..."
-sudo apt-get update
 sudo apt-get install -y docker.io
 sudo groupadd docker
 sudo gpasswd -a $USER docker
