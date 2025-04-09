@@ -27,6 +27,8 @@ sudo apt-get install -y docker.io
 sudo groupadd docker
 sudo gpasswd -a $USER docker
 
+sleep 10
+
 echo "Installing Docker-Compose..."
 mkdir -p $HOME/bin
 cd $HOME/bin
@@ -36,11 +38,15 @@ chmod +x docker-compose
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
+sleep 10
+
 echo "Installing Terraform..."
 cd $HOME/bin
 wget https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip
 unzip terraform_1.11.3_linux_amd64.zip
 rm terraform_1.11.3_linux_amd64.zip
+
+sleep 10
 
 echo "Installing Java 11..."
 cd $HOME
@@ -52,6 +58,8 @@ echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 rm openjdk-11.0.2_linux-x64_bin.tar.gz
 
+sleep 10
+
 echo "Installing Spark..."
 cd $HOME/spark
 wget https://archive.apache.org/dist/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
@@ -60,6 +68,8 @@ echo 'export SPARK_HOME="$HOME/spark/spark-3.3.2-bin-hadoop3"' >> ~/.bashrc
 echo 'export PATH="$SPARK_HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 rm spark-3.3.2-bin-hadoop3.tgz
+
+sleep 10
 
 echo "Setup PySpark..."
 echo 'export PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"' >> ~/.bashrc
