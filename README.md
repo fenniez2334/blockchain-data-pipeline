@@ -285,16 +285,18 @@ source ~/.bashrc
 ```
 
 ### Kestra and Orchestration
-1. Start Kestra with Docker Compose
+1. Log out and log back in
+After adding your user to the Docker group, you need to log out and log back in for the group changes to take effect. This step ensures your user has the necessary permissions to interact with Docker without `sudo`.
+2. Start Kestra with Docker Compose
 Open a terminal in your VM and navigate to the Kestra directory:
 ```
 cd ~/blockchain-data-pipeline/kestra
 docker-compose up -d
 ```
-2. Expose Port for Web Access
+3. Expose Port for Web Access
 * In VS Code, forward port 8080 to access the Kestra web UI.
 * Open your browser and go to: http://localhost:8080/
-3. Configure Key-Value Store in Kestra
+4. Configure Key-Value Store in Kestra
 * In the Kestra UI, navigate to `KV Store`.
 * Add a new key:
     - Namespace: `blockchain`
@@ -303,7 +305,7 @@ docker-compose up -d
 
 ![kestra_KV_settings](images/kestra_KV_settings.jpg) 
 
-4. Execute Flows
+5. Execute Flows
 * Execute `gcp_kv.yaml` 
 This flow sets up all the required Google Cloud Platform Key-Value pairs (such as projectID and location) in Kestra's KV Store.
 * Execute `gcp_setup.yaml` 
