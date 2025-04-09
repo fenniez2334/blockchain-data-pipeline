@@ -274,7 +274,11 @@ chmod +x startup_vm.sh
 bash startup_vm.sh || echo 'Startup script failed'
 ```
 This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
-🛠️ **Note: If the script fails, check the terminal output for errors and manually troubleshoot missing packages.**
+
+🛠️ **Note: If a purple screen appears (e.g., a package configuration screen asking which services should be restarted due to outdated libraries), simply press `Esc` to exit.**
+
+🛠️ **Note: If the script fails, check the terminal output for any error messages and manually troubleshoot missing packages.**
+
 
 ### Kestra and Orchestration
 1. Start Kestra with Docker Compose
