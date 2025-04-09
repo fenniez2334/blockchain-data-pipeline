@@ -75,7 +75,7 @@ To ensure smooth reproducibility of this project, I recommend following the step
 * If you are using a Windows system, download and install [Git Bash](https://git-scm.com/downloads)
 2. Clone the Repository
 * Open a git bash terminal and navigate to your home directory `cd ~` 
-* clone this github repository under your home directory 
+* Clone this github repository under your home directory 
 ```bash
 git clone https://github.com/fenniez2334/blockchain-data-pipeline.git
 ```
@@ -167,17 +167,18 @@ This project uses `Terraform` to automate the creation and configuration of Goog
 ```
 4. Run Terraform Commands
 * execute the following steps:
-- `terraform init`: Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control
-- `terraform plan`: Matches/previews local changes against a remote state, and proposes an Execution Plan.
-- Before running, make the IP update script executable:
-```bash
-chmod +x update_ssh_config.sh
-```
-* Then execute:
-```bash
-terraform apply -auto-approve && ./update_ssh_config.sh
-```
-This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. \
+    - `terraform init`: Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control
+    - `terraform plan`: Matches/previews local changes against a remote state, and proposes an Execution Plan.
+    - Before running, make the IP update script executable:
+    ```bash
+    chmod +x update_ssh_config.sh
+    ```
+    - Then execute:
+    ```bash
+    terraform apply -auto-approve && ./update_ssh_config.sh
+    ```
+    - This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. \
+
 5. Destroy Infrastructure (Optional)
 * Once you successfully reproduce this project and you would like to remove your resources from the Cloud, use the `terraform destroy` command.
 **Warning: This will remove all GCP resources defined in your Terraform configuration.**
@@ -194,9 +195,9 @@ cd ~/.ssh/
 ```bash
 ssh-keygen -t rsa -f gcp -C fenniez -b 2048
 ```
-This command will generate:
-- one public key `gcp.pub` 
-- one private key `gcp`
+* This command will generate:
+    - one public key `gcp.pub` 
+    - one private key `gcp`
 4. Add Your Public Key to Google Cloud
 - Display the contents of your public key:
 ```bash
@@ -342,7 +343,7 @@ gcloud dataproc clusters create blockchain-data-pipeline-cluster \
     --optional-components=JUPYTER,DOCKER \
     --enable-component-gateway
 ```
-Wait for a few minutes until the cluster is fully provisioned. Then check the cluster status:
+* Wait for a few minutes until the cluster is fully provisioned. Then check the cluster status:
 ```bash
 gcloud dataproc clusters describe blockchain-data-pipeline-cluster --region=us-central1
 ```
@@ -373,7 +374,7 @@ gcloud dataproc jobs submit pyspark gs://blockchain-data-pipeline-bucket/code/sp
 ```
 **Note:** This Spark job will take over 10 minutes to process, depending on the size of the dataset, so please be patient as it runs. \
 **Note:** Replace `--bucket=` with your own temporary bucket name generated with Dataproc (usually formatted like `dataproc-temp-us-central1-XXXXXXXX-XXXXXXXXX`) \
-4. Clean Up (Optional but Recommended)
+5. Clean Up (Optional but Recommended)
 After the job finishes and your data is successfully written to BigQuery, delete the Dataproc cluster to avoid incurring extra charges:
 ```
 gcloud dataproc clusters delete blockchain-data-pipeline-cluster --region=us-central1
