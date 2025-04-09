@@ -118,6 +118,7 @@ Please provide the service account the permissions below (sorted by name):
 * Enable the following APIs for your project:
 - [IAM API](https://console.cloud.google.com/apis/library/iam.googleapis.com)
 - [IAM Credentials API](https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com)
+- [Cloud Dataproc API](https://console.cloud.google.com/apis/library/dataproc.googleapis.com)
 
 ### Set Up Google Cloud Service Account Credentials
 1. Access Google Cloud Console
