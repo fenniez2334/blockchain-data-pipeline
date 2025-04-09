@@ -269,9 +269,9 @@ Once the VM is up and running, it will already have the Git repository cloned. \
 To install all the necessary dependencies and tools, run the following commands in the terminal:
 
 ```bash
-cd ~/blockchain-data-pipeline/terraform
-chmod +x startup_vm.sh
-bash startup_vm.sh || echo 'Startup script failed'
+cd ~
+chmod +x ~/blockchain-data-pipeline/terraform/startup_vm.sh
+bash ~/blockchain-data-pipeline/terraform/startup_vm.sh || echo 'Startup script failed'
 ```
 This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
 
