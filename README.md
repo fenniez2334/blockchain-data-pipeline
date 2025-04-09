@@ -177,7 +177,7 @@ This project uses `Terraform` to automate the creation and configuration of Goog
     ```bash
     terraform apply -auto-approve && ./update_ssh_config.sh
     ```
-    - This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. \
+    - This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. 
 
 5. Destroy Infrastructure (Optional)
 * Once you successfully reproduce this project and you would like to remove your resources from the Cloud, use the `terraform destroy` command.
