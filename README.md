@@ -16,9 +16,8 @@ This project builds scalable data pipelines for ingesting, processing, and analy
     - [Setup SSH access into VM](#setup-ssh-access-into-vm)
     - [Creating SSH Config File](#creating-ssh-config-file)
     - [Accessing the Remote Machine with VS Code and SSH Remote](#accessing-the-remote-machine-with-vs-code-and-ssh-remote)
-    - [Using SFTP to Upload GCP Credentials to the Remote VM](#using-sftp-to-upload-gcp-credentials-to-the-remote-vm)
-    - [Set Up Google Application Credentials](#set-up-google-application-credentials)
     - [Setup environment on VM](#setup-environment-on-vm)
+    - [Using SFTP to Upload GCP Credentials to the Remote VM](#using-sftp-to-upload-gcp-credentials-to-the-remote-vm)
     - [Kestra and Orchestration](#kestra-and-orchestration)
     - [Batch Processing](#batch-processing)
     - [Setting up dbt Cloud](#setting-up-dbt-cloud)
@@ -239,6 +238,27 @@ ssh -i ~/.ssh/gcp fenniez@externalIP
 2. Click the `Open a Remote Window` or `><` green icon in the bottom-left corner of VS Code
 3. Select `Connect to Host...`, then pick our VM instance name
 
+
+### Setup environment on VM
+Once the VM is up and running, it will already have the Git repository cloned. \
+To install all the necessary dependencies and tools, run the following commands in the terminal:
+
+```bash
+cd ~
+chmod +x ~/blockchain-data-pipeline/terraform/startup_vm.sh
+bash ~/blockchain-data-pipeline/terraform/startup_vm.sh || echo 'Startup script failed'
+```
+This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
+
+🛠️ **Note: If a purple screen appears (e.g., a package configuration screen asking which services should be restarted due to outdated libraries), simply press `Esc` to exit.**
+
+🛠️ **Note: If the script fails, check the terminal output for any error messages and manually troubleshoot missing packages.**
+
+Once everything is successfully installed, run the following command to reload bashrc and apply any changes:
+```bash
+source ~/.bashrc
+```
+
 ### Using SFTP to Upload GCP Credentials to the Remote VM
 1. Navigate to the Credentials Folder Locally
 ```bash
@@ -263,27 +283,6 @@ In your VM terminal, run the following commands (assuming you're using bash) to 
 echo 'export GOOGLE_APPLICATION_CREDENTIALS=~/key/gcp-creds.json' >> ~/.bashrc
 source ~/.bashrc
 ```
-
-### Setup environment on VM
-Once the VM is up and running, it will already have the Git repository cloned. \
-To install all the necessary dependencies and tools, run the following commands in the terminal:
-
-```bash
-cd ~
-chmod +x ~/blockchain-data-pipeline/terraform/startup_vm.sh
-bash ~/blockchain-data-pipeline/terraform/startup_vm.sh || echo 'Startup script failed'
-```
-This script installs required software such as Python, Spark, pip packages, and docker to prepare the environment for running the pipeline. \
-
-🛠️ **Note: If a purple screen appears (e.g., a package configuration screen asking which services should be restarted due to outdated libraries), simply press `Esc` to exit.**
-
-🛠️ **Note: If the script fails, check the terminal output for any error messages and manually troubleshoot missing packages.**
-
-Once everything is successfully installed, run the following command to reload bashrc and apply any changes:
-```bash
-source ~/.bashrc
-```
-
 
 ### Kestra and Orchestration
 1. Start Kestra with Docker Compose
