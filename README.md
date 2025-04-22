@@ -165,7 +165,9 @@ This project uses `Terraform` to automate the creation and configuration of Goog
 7. resource "google_compute_firewall" (SSH/Ingress Rules)
 8. output "vm_external_ip" (External IP for the VM)
 ```
-4. Run Terraform Commands
+4. Update `variables.tf` with your own projectID and unique bucket name
+
+5. Run Terraform Commands
 * execute the following steps:
     - `terraform init`: Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control
     - `terraform plan`: Matches/previews local changes against a remote state, and proposes an Execution Plan.
@@ -179,7 +181,7 @@ This project uses `Terraform` to automate the creation and configuration of Goog
     ```
     - This will automatically create the infrastructure and update the VM's external IP in your SSH config for easy access. 
 
-5. Destroy Infrastructure (Optional)
+6. Destroy Infrastructure (Optional)
 * Once you successfully reproduce this project and you would like to remove your resources from the Cloud, use the `terraform destroy` command.
 **Warning: This will remove all GCP resources defined in your Terraform configuration.**
 
